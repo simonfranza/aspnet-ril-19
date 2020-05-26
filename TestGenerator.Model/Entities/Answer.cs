@@ -12,10 +12,10 @@ namespace TestGenerator.Model.Entities
         [DataType(DataType.Text)]
         public string Text { get; set; }
 
+        public bool IsValid { get; set; }
+
         [Required]
         [Column("QuestionId")]
         public int QuestionId { get; set; }
-
-        public Question Question { get; set; }
     }
 }

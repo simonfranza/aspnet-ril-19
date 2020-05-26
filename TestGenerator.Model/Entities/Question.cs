@@ -9,10 +9,6 @@ namespace TestGenerator.Model.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int QuestionId { get; set; }
 
-        [Required]
         public ICollection<Answer> Answers { get; set; }
-
-        [Required]
-        public ICollection<Answer> ValidAnswers { get; set; }
     }
 }
