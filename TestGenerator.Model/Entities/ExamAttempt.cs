@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestGenerator.Model.Entities
 {
-    public class ExamParticipation
+    public class ExamAttempt
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ExamParticipationId { get; set; }
+        public int ExamAttemptId { get; set; }
 
         public int Result { get; set; }
 

@@ -10,12 +10,6 @@ namespace TestGenerator.Model.Entities
     {
 
         [Required]
-        [DataType(DataType.EmailAddress)]
-        [EmailAddress]
-        [MaxLength(255)]
-        public string Email { get; set; }
-
-        [Required]
         [DataType(DataType.Password)]
         [PasswordPropertyText]
         [MaxLength(255)]
