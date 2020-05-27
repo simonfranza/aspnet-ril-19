@@ -13,11 +13,14 @@ namespace TestGenerator.Model.Data
         public DbSet<UserAnswer> UserAnswers { get; set; }
         public DbSet<ExamAttempt> ExamAttempts { get; set; }
 
-
-
         public TestGeneratorContext(DbContextOptions<TestGeneratorContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
         }
     }
 }

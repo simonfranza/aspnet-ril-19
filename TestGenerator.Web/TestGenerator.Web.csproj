@@ -15,4 +15,8 @@
     <ProjectReference Include="..\TestGenerator.Model\TestGenerator.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
+  </ItemGroup>
+
 </Project>
