@@ -2,3 +2,8 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+$(function () {
+    $('#questionTypeSelect').on('change', function () {
+        alert($('#questionTypeSelect').val());
+    });
+});
