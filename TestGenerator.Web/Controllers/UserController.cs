@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace TestGenerator.Web.Controllers
     public class UserController : Controller
     {
         private readonly TestGeneratorContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UserController(TestGeneratorContext context)
+        public UserController(TestGeneratorContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         
         [HttpGet]
@@ -43,9 +46,15 @@ namespace TestGenerator.Web.Controllers
                 Lastname = userViewModel.LastName,
             };
 
-            await _context.Users.AddAsync(user);
+            await _context.Users.AddAsync(user, default(CancellationToken));
+
             _context.SaveChanges();
 
+            if (user.Email.Contains("@cesi.fr"))
+            {
+                await _userManager.AddToRoleAsync(user, "Administrator");
+            }
+            
             return View(userViewModel);
         }
     }
