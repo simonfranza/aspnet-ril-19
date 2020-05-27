@@ -41,9 +41,12 @@ namespace TestGenerator.Web
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<User>()
-                .AddEntityFrameworkStores<TestGeneratorContext>();
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<TestGeneratorContext>()
+                .AddDefaultUI();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);        }
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
