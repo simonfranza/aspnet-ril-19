@@ -13,14 +13,87 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label for="Text">Texte de la question</label>
-                <input id="questionText" name="Text" type="text" asp-for="@Model.Text"/>
+                <label for="questionText">Texte de la question</label>
+                <input id="questionText" name="Text" type="text" asp-for="@Model.Text" />
             </div>
             <div class="form-group">
                 <label for="qType">Type de question</label>
-                <select id="questionTypeSelect" asp-for="@Model.QuestionType" asp-items="Html.GetEnumSelectList<TestGenerator.Model.Constants.QuestionTypeEnum>()"></select>
+                <select name="qType" id="questionTypeSelect" asp-for="@Model.QuestionType" asp-items="Html.GetEnumSelectList<TestGenerator.Model.Constants.QuestionTypeEnum>()"></select>
             </div>
-            
+            <!-- Section question Oui / Non -->
+            <div class="form-group answers" id="yesno">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Réponses possibles</th>
+                            <th>Réponse correcte</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><label for="yes">Oui</label></td>
+                            <td><input type="radio" id="yes" name="yesno" value="yes" /></td>
+                        </tr>
+                        <tr>
+                            <td><label for="no">Non</label></td>
+                            <td><input type="radio" id="no" name="yesno" value="no" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Section question Oui / Non -->
+            <!-- Section question choix multiple -->
+            <div class="form-group answers" id="multichoice">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Réponses possibles</th>
+                            <th>Réponse correcte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mcq">
+                        <tr>
+                            <td><input type="text" id="answer-1" /></td>
+                            <td><input type="checkbox" id="isvalid-1" /></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="answer-2" /></td>
+                            <td><input type="checkbox" id="isvalid-2" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button>Ajouter une réponse</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Section question choix multiple -->
+            <!-- Section question choix unique -->
+            <div class="form-group answers" id="singlechoice">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Réponses possibles</th>
+                            <th>Réponse correcte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scq">
+                        <tr>
+                            <td><input type="text" id="answer-1" /></td>
+                            <td><input type="radio" id="isvalid-1" name="singlechoice"/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="answer-2" /></td>
+                            <td><input type="radio" id="isvalid-2" name="singlechoice"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button>Ajouter une réponse</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Section question choix unique -->
+
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>

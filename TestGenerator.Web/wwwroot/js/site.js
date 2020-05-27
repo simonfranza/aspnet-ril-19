@@ -3,7 +3,20 @@
 
 // Write your JavaScript code.
 $(function () {
+    $(document).ready(() => {
+        $('.answers').hide();
+        $('#yesno').show();
+    });
+
     $('#questionTypeSelect').on('change', function () {
-        alert($('#questionTypeSelect').val());
+        $('.answers').hide();
+        switch (this.value) {
+            case '0': $('#yesno').show();
+                break;
+            case '1': $('#singlechoice').show();
+                break;
+            case '2': $('#multichoice').show();
+                break;
+        }
     });
 });
