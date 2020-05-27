@@ -38,10 +38,10 @@ namespace TestGenerator.Web.Controllers
                 Answers = questionViewModel.Answers
             };
 
-            _context.Add(question);
+            await _context.AddAsync(question);
             await _context.SaveChangesAsync();
 
-            return View(question);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

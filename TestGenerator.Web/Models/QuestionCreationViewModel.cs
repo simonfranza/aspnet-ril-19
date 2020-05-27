@@ -13,9 +13,11 @@ namespace TestGenerator.Web.Models
         [Required(ErrorMessage="La question doit avoir un texte.")]
         [MaxLength(255)]
         [DataType(DataType.Text)]
+        [Display(Name ="Texte de la question")]
         public string Text { get; set; }
 
         [Required(ErrorMessage ="La question doit avoir un type.")]
+        [Display(Name = "Type de question")]
         public QuestionTypeEnum QuestionType { get; set; }
 
         public ICollection<Answer> Answers { get; set; }
