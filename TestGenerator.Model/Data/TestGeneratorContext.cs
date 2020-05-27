@@ -13,8 +13,6 @@ namespace TestGenerator.Model.Data
         public DbSet<UserAnswer> UserAnswers { get; set; }
         public DbSet<ExamAttempt> ExamAttempts { get; set; }
 
-
-
         public TestGeneratorContext(DbContextOptions<TestGeneratorContext> options)
             : base(options)
         {
