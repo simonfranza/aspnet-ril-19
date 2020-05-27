@@ -42,7 +42,8 @@ namespace TestGenerator.Web
 
             services.AddDefaultIdentity<User>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<TestGeneratorContext>();
+                .AddEntityFrameworkStores<TestGeneratorContext>()
+                .AddDefaultUI();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

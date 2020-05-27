@@ -67,11 +67,22 @@ namespace TestGenerator.UnitTest
             var context = GetFakeContext();
 
             var userStoreMock = Mock.Of<IUserStore<User>>();
+
             var userMgrMock = new Mock<UserManager<User>>(userStoreMock, null, null, null, null, null, null, null, null);
-            userMgrMock.Setup(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"));
+            userMgrMock
+                .Setup(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success)
+                .Verifiable();
             
-            var userDbSetMock = new Mock<DbSet<User>>();
-            context.Users = userDbSetMock.Object;
+            userMgrMock
+                .Setup(mgr => mgr.FindByIdAsync(It.IsNotNull<string>()))
+                .ReturnsAsync(fixture.Create<User>())
+                .Verifiable();
+
+            userMgrMock
+                .Setup(mgr => mgr.AddToRoleAsync(It.IsNotNull<User>(), It.IsNotNull<string>()))
+                .ReturnsAsync(IdentityResult.Success)
+                .Verifiable();
 
             var controller = new UserController(context, userMgrMock.Object);
 
@@ -80,7 +91,7 @@ namespace TestGenerator.UnitTest
 
             // Assert
             Assert.IsType<ViewResult>(result);
-            userDbSetMock.Verify(x=> x.AddAsync(It.IsNotNull<User>(), default(CancellationToken)), Times.Once);
+            userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
@@ -92,10 +103,20 @@ namespace TestGenerator.UnitTest
 
             var userStoreMock = Mock.Of<IUserStore<User>>();
             var userMgrMock = new Mock<UserManager<User>>(userStoreMock, null, null, null, null, null, null, null, null);
-            userMgrMock.Setup(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"));
+            userMgrMock
+                .Setup(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success)
+                .Verifiable();
+            
+            userMgrMock
+                .Setup(mgr => mgr.FindByIdAsync(It.IsNotNull<string>()))
+                .ReturnsAsync(fixture.Create<User>())
+                .Verifiable();
 
-            var userDbSetMock = new Mock<DbSet<User>>();
-            context.Users = userDbSetMock.Object;
+            userMgrMock
+                .Setup(mgr => mgr.AddToRoleAsync(It.IsNotNull<User>(), "Administrator"))
+                .ReturnsAsync(IdentityResult.Success)
+                .Verifiable();
 
             var controller = new UserController(context, userMgrMock.Object);
             var userViewModel = fixture.Create<UserRegistrationViewModel>();
@@ -107,8 +128,9 @@ namespace TestGenerator.UnitTest
             // Assert
             Assert.IsType<ViewResult>(result);
             Assert.Contains("@cesi.fr", userViewModel.Email);
-            userDbSetMock.Verify(x=> x.AddAsync(It.IsNotNull<User>(), default(CancellationToken)), Times.Once);
+            userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
             userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"), Times.Once);
+            userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "User"), Times.Never);
         }
 
         [Fact]
@@ -120,10 +142,20 @@ namespace TestGenerator.UnitTest
 
             var userStoreMock = Mock.Of<IUserStore<User>>();
             var userMgrMock = new Mock<UserManager<User>>(userStoreMock, null, null, null, null, null, null, null, null);
-            userMgrMock.Setup(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"));
+            userMgrMock
+                .Setup(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success)
+                .Verifiable();
+            
+            userMgrMock
+                .Setup(mgr => mgr.FindByIdAsync(It.IsNotNull<string>()))
+                .ReturnsAsync(fixture.Create<User>())
+                .Verifiable();
 
-            var userDbSetMock = new Mock<DbSet<User>>();
-            context.Users = userDbSetMock.Object;
+            userMgrMock
+                .Setup(mgr => mgr.AddToRoleAsync(It.IsNotNull<User>(), "User"))
+                .ReturnsAsync(IdentityResult.Success)
+                .Verifiable();
 
             var controller = new UserController(context, userMgrMock.Object);
             var userViewModel = fixture.Create<UserRegistrationViewModel>();
@@ -135,8 +167,9 @@ namespace TestGenerator.UnitTest
             // Assert
             Assert.IsType<ViewResult>(result);
             Assert.Contains("@viacesi.fr", userViewModel.Email);
-            userDbSetMock.Verify(x=> x.AddAsync(It.IsNotNull<User>(), default(CancellationToken)), Times.Once);
+            userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
             userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"), Times.Never);
+            userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "User"), Times.Once);
         }
     }
 }

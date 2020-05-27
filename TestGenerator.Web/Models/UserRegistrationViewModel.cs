@@ -4,6 +4,10 @@ namespace TestGenerator.Web.Models
 {
     public class UserRegistrationViewModel
     {
+        [Required(ErrorMessage = "Un nom d'utilisateur est requis")]
+        [Display(Name="Nom d'utilisateur")]
+        public string Username { get; set; }
+
         [Required(ErrorMessage = "Une adresse e-mail est requise")]
         [EmailAddress]
         [Display(Name="Adresse e-mail")]

@@ -37,23 +37,37 @@ namespace TestGenerator.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new User
+            var userId = Guid.NewGuid().ToString();
+
+            var userData = new User
             {
-                Id = Guid.NewGuid().ToString(),
-                Email = userViewModel.Email,
+                Id = userId,
+                UserName = userViewModel.Username,
                 Password = userViewModel.Password,
+                Email = userViewModel.Email,
                 Firstname = userViewModel.FirstName,
                 Lastname = userViewModel.LastName,
             };
 
-            await _context.Users.AddAsync(user, default(CancellationToken));
+            var userCreationResult = await _userManager.CreateAsync(userData, userViewModel.Password);
 
-            _context.SaveChanges();
-
-            if (user.Email.Contains("@cesi.fr"))
+            if (!userCreationResult.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "Administrator");
+                foreach (var error in userCreationResult.Errors) { 
+                    ModelState.AddModelError("", error.Description); 
+                } 
             }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            var roleAttributionResult = await _userManager.AddToRoleAsync(user, userViewModel.Email.Contains("@cesi.fr") ? "Administrator" : "User");
+
+            if (!roleAttributionResult.Succeeded)
+            {
+                foreach (var error in roleAttributionResult.Errors) { 
+                    ModelState.AddModelError("", error.Description); 
+                } 
+            }
+            
             
             return View(userViewModel);
         }
