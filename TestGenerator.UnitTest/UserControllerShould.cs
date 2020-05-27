@@ -110,5 +110,33 @@ namespace TestGenerator.UnitTest
             userDbSetMock.Verify(x=> x.AddAsync(It.IsNotNull<User>(), default(CancellationToken)), Times.Once);
             userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"), Times.Once);
         }
+
+        [Fact]
+        public async Task Register_Creates_New_User_In_Db_Without_Administrator_Role_When_Email_Does_not_Belong_To_Cesi_Staff()
+        {
+            // Arrange
+            var fixture = new Fixture();
+            var context = GetFakeContext();
+
+            var userStoreMock = Mock.Of<IUserStore<User>>();
+            var userMgrMock = new Mock<UserManager<User>>(userStoreMock, null, null, null, null, null, null, null, null);
+            userMgrMock.Setup(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"));
+
+            var userDbSetMock = new Mock<DbSet<User>>();
+            context.Users = userDbSetMock.Object;
+
+            var controller = new UserController(context, userMgrMock.Object);
+            var userViewModel = fixture.Create<UserRegistrationViewModel>();
+            userViewModel.Email = "test@viacesi.fr";
+            
+            // Act
+            var result = await controller.Register(userViewModel);
+
+            // Assert
+            Assert.IsType<ViewResult>(result);
+            Assert.Contains("@viacesi.fr", userViewModel.Email);
+            userDbSetMock.Verify(x=> x.AddAsync(It.IsNotNull<User>(), default(CancellationToken)), Times.Once);
+            userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"), Times.Never);
+        }
     }
 }
