@@ -114,7 +114,7 @@ namespace TestGenerator.UnitTest
                 .Verifiable();
 
             userMgrMock
-                .Setup(mgr => mgr.AddToRoleAsync(It.IsNotNull<User>(), "Administrator"))
+                .Setup(mgr => mgr.AddToRoleAsync(It.IsNotNull<User>(), "Admin"))
                 .ReturnsAsync(IdentityResult.Success)
                 .Verifiable();
 
@@ -129,7 +129,7 @@ namespace TestGenerator.UnitTest
             Assert.IsType<ViewResult>(result);
             Assert.Contains("@cesi.fr", userViewModel.Email);
             userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
-            userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"), Times.Once);
+            userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Admin"), Times.Once);
             userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "User"), Times.Never);
         }
 
@@ -168,7 +168,7 @@ namespace TestGenerator.UnitTest
             Assert.IsType<ViewResult>(result);
             Assert.Contains("@viacesi.fr", userViewModel.Email);
             userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
-            userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Administrator"), Times.Never);
+            userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Admin"), Times.Never);
             userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "User"), Times.Once);
         }
     }
