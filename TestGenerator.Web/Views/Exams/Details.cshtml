@@ -1,54 +1,31 @@
-﻿@model TestGenerator.Model.Entities.Exam
+﻿@using TestGenerator.Model.Entities
+
+@model Exam
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+
+<h2>@Model.Name</h2>
+<a class="badge badge-primary" asp-controller="Modules" asp-action="Details" asp-route-id="@Model.Module.ModuleId">@Model.Module.Title</a>
+<p class="text-muted">@Model.Description</p>
+
+
+<div class="row">
+    <h4>@Html.DisplayNameFor(model => model.Questions)</h4>
+</div>
+<div class="row">
+    <ul>
+        @foreach (ExamQuestion question in Model.Questions)
+        {
+            <li>
+                <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Question.Text</a>
+            </li>
+        }
+    </ul>
+</div>
 
 <div>
-    <div class="row">
-        <dl class="dl-horizontal col-md-3">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-        </dl>
-        <dl class="dl-horizontal col-md-3">
-            <dt>
-                @Html.DisplayNameFor(model => model.Module)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Module.Title)
-            </dd>
-        </dl>
-        <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-        </dl>
-    </div>
-    <div class="row">
-        <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.Questions)
-            </dt>
-            <dd>
-                <ul>
-                    @foreach (TestGenerator.Model.Entities.ExamQuestion question in Model.Questions)
-                    {
-                        <li>@question.Question.Text</li>
-                    }
-                </ul>
-            </dd>
-        </dl>
-    </div>
-</div>
-<div>
-    <a asp-action="Index">Retour à la liste</a>
+    <a class="btn btn-primary" asp-action="Index">Retour à la liste</a>
 </div>
