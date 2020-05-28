@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -36,16 +35,16 @@ namespace TestGenerator.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var moduleData = new Module
+            var module= new Module
             {
                 Title = moduleViewModel.Title,
                 Description = moduleViewModel.Description
             };
 
-            await _context.Modules.AddAsync(moduleData);
+            await _context.Modules.AddAsync(module);
             await _context.SaveChangesAsync();
 
-            return RedirectToRoute(new { controller = "Modules", action = "Details", id = moduleData.ModuleId });
+            return RedirectToRoute(new { controller = "Modules", action = "Details", id = module.ModuleId });
         }
 
         [HttpGet]

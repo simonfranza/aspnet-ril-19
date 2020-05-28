@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -50,13 +49,10 @@ namespace TestGenerator.Web.Controllers
         public IActionResult Create()
         {
             var questionViewModel = new QuestionCreationViewModel();
-            questionViewModel.Modules = new List<SelectListItem>();
-
-            foreach(Module module in _context.Modules)
-            {
-                questionViewModel.Modules.Add(new SelectListItem { Text = module.Title, Value = "" + module.ModuleId });
-            }
-
+            questionViewModel.Modules = _context.Modules
+                .Select(module => new SelectListItem {Text = module.Title, Value = "" + module.ModuleId})
+                .ToList();
+            
             return View(questionViewModel);
         }
     }

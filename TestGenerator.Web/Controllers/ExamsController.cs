@@ -49,13 +49,10 @@ namespace TestGenerator.Web.Controllers
         public IActionResult Create()
         {
             var viewModel = new ExamCreationViewModel();
-            viewModel.Modules = new List<SelectListItem>();
             viewModel.Questions = _context.Questions.ToList();
-
-            foreach (Module module in _context.Modules)
-            {
-                viewModel.Modules.Add(new SelectListItem { Text = module.Title, Value = "" + module.ModuleId });
-            }
+            viewModel.Modules = _context.Modules
+                .Select(module => new SelectListItem {Text = module.Title, Value = "" + module.ModuleId})
+                .ToList();
 
             return View(viewModel);
         }

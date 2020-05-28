@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Moq;
@@ -12,9 +10,7 @@ using TestGenerator.Model.Entities;
 using TestGenerator.Web.Controllers;
 using TestGenerator.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using AutoFixture.AutoMoq;
-using System.Threading;
 
 namespace TestGenerator.UnitTest
 {
@@ -26,14 +22,7 @@ namespace TestGenerator.UnitTest
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            var context = new TestGeneratorContext(options);
-
-            var fixture = new Fixture();
-            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
-                             .ForEach(b => fixture.Behaviors.Remove(b));
-            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-
-            return context;
+            return new TestGeneratorContext(options);
         }
 
         [Fact]
@@ -45,7 +34,6 @@ namespace TestGenerator.UnitTest
             var context = GetFakeContext();
 
             var moduleDbSetMock = new Mock<DbSet<Module>>();
-
             context.Modules = moduleDbSetMock.Object;
 
             var controller = new ModulesController(context);
@@ -62,19 +50,13 @@ namespace TestGenerator.UnitTest
         public async Task Return_Bad_Request_On_Create_With_Invalid_Model()
         {
             // Arrange
-            var fixture = new Fixture();
-            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
             var context = GetFakeContext();
-
-            var moduleDbSetMock = new Mock<DbSet<Module>>();
-
-            context.Modules = moduleDbSetMock.Object;
 
             var controller = new ModulesController(context);
             controller.ModelState.AddModelError("Title", "Required");
 
             // Act
-            var result = await controller.Create(fixture.Create<ModuleCreationViewModel>());
+            var result = await controller.Create(new Fixture().Create<ModuleCreationViewModel>());
 
             // Assert
             var badRequestResult = Assert.IsAssignableFrom<BadRequestObjectResult>(result);
@@ -93,8 +75,6 @@ namespace TestGenerator.UnitTest
             var module = fixture.Create<Module>();
 
             var context = GetFakeContext();
-            context.Modules.RemoveRange(context.Modules.ToList());
-            context.SaveChanges();
             context.Modules.Add(module);
             context.SaveChanges();
 
@@ -104,25 +84,14 @@ namespace TestGenerator.UnitTest
             var result = await controller.Details(module.ModuleId);
 
             // Assert
-            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
+            Assert.IsAssignableFrom<ViewResult>(result);
         }
 
         [Fact]
         public async Task Return_Not_Found_On_Null_Id()
         {
             // Arrange
-            var fixture = new Fixture();
-            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
-                .ForEach(b => fixture.Behaviors.Remove(b));
-            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-            var context = GetFakeContext();
-
-            var module = fixture.Create<Module>();
-
-            context.Modules.Add(module);
-            context.SaveChanges();
-
-            var controller = new ModulesController(context);
+            var controller = new ModulesController(GetFakeContext());
 
             // Act
             var result = await controller.Details(null);
