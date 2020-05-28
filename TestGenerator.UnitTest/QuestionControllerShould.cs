@@ -34,9 +34,10 @@ namespace TestGenerator.UnitTest
         }
 
         [Fact]
-        public async Task Create_New_Single_Choice_Question()
+        public async Task Create_New_Question()
         {
             // Arrange
+            var fixture = new Fixture();
             var context = GetFakeContext();
 
             var questionDbSetMock = new Mock<DbSet<Question>>();
@@ -44,126 +45,12 @@ namespace TestGenerator.UnitTest
 
             var controller = new QuestionsController(context);
 
-            List<Answer> answers = new List<Answer>() {
-                new Answer {
-                    QuestionId = 3,
-                    IsValid = true,
-                    Text = "Yes"
-                }, new Answer
-                {
-                    QuestionId = 3,
-                    IsValid = false,
-                    Text = "No"
-                }, new Answer
-                {
-                    QuestionId = 3,
-                    IsValid = false,
-                    Text = "No"
-                }
-            };
-            var question = new QuestionCreationViewModel
-            {
-                
-                Text = "Is this a valid question?",
-                QuestionType = QuestionTypeEnum.SingleChoice,
-                Answers = answers
-            };
-
             // Act
-            var result = await controller.Create(question);
+            var result = await controller.Create(fixture.Create<QuestionCreationViewModel>());
 
             // Assert
-            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var questionModel = Assert.IsAssignableFrom<Question>(viewResult.Model);
-            Assert.Equal(QuestionTypeEnum.SingleChoice, questionModel.QuestionType);
-            Assert.True(questionModel.Answers.Count > 2);
-        }
-
-        [Fact]
-        public async Task Create_New_Multiple_Choice_Question()
-        {
-            // Arrange
-            var context = GetFakeContext();
-
-            var questionDbSetMock = new Mock<DbSet<Question>>();
-            context.Questions = questionDbSetMock.Object;
-
-            var controller = new QuestionsController(context);
-
-            List<Answer> answers = new List<Answer>() {
-                new Answer {
-                    QuestionId = 2,
-                    IsValid = true,
-                    Text = "Yes"
-                }, new Answer
-                {
-                    QuestionId = 2,
-                    IsValid = false,
-                    Text = "No"
-                }, new Answer
-                {
-                    QuestionId = 2,
-                    IsValid = false,
-                    Text = "No"
-                }
-            };
-            var question = new QuestionCreationViewModel
-            {
-
-                Text = "Is this a valid question?",
-                QuestionType = QuestionTypeEnum.MultipleChoice,
-                Answers = answers
-            };
-
-            // Act
-            var result = await controller.Create(question);
-
-            // Assert
-            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var questionModel = Assert.IsAssignableFrom<Question>(viewResult.Model);
-            Assert.Equal(QuestionTypeEnum.MultipleChoice, questionModel.QuestionType);
-            Assert.True(questionModel.Answers.Count > 2);
-        }
-
-        [Fact]
-        public async Task Create_New_Yes_No_Choice_Question()
-        {
-            // Arrange
-            var context = GetFakeContext();
-
-            var questionDbSetMock = new Mock<DbSet<Question>>();
-            context.Questions = questionDbSetMock.Object;
-
-            var controller = new QuestionsController(context);
-
-            List<Answer> answers = new List<Answer>() {
-                new Answer {
-                    QuestionId = 1,
-                    IsValid = true,
-                    Text = "Yes"
-                }, new Answer
-                {
-                    QuestionId = 1,
-                    IsValid = false,
-                    Text = "No"
-                }
-            };
-            var question = new QuestionCreationViewModel
-            {
-
-                Text = "Is this a valid question?",
-                QuestionType = QuestionTypeEnum.YesNo,
-                Answers = answers
-            };
-
-            // Act
-            var result = await controller.Create(question);
-
-            // Assert
-            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var questionModel = Assert.IsAssignableFrom<Question>(viewResult.Model);
-            Assert.Equal(QuestionTypeEnum.YesNo, questionModel.QuestionType);
-            Assert.Equal(2, questionModel.Answers.Count);
+            Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            questionDbSetMock.Verify(x => x.AddAsync(It.IsNotNull<Question>(), default), Times.Once);
         }
 
         [Fact]

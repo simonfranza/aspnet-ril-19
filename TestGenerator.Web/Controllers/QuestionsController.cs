@@ -38,7 +38,7 @@ namespace TestGenerator.Web.Controllers
                 Answers = questionViewModel.Answers
             };
 
-            await _context.AddAsync(question);
+            await _context.Questions.AddAsync(question);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
