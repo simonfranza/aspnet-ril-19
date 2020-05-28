@@ -20,55 +20,16 @@
             <p>
                 <a class="btn btn-primary" asp-action="Create">Créer un examen</a>
             </p>
-            <div class="card-deck">
-            
-                @foreach (var exam in Model)
-                {
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-header">
-                            <h5 class="card-title">@exam.Name</h5>
-                            <a class="badge badge-primary" asp-controller="Modules" asp-action="Details" asp-route-id="@exam.Module.ModuleId">@exam.Module.Title</a>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-muted">@exam.QuestionAmount questions</h6>
-                            <p class="card-text">@exam.Description</p>
-                            <p class="card-text">@exam.AuthorizedAttempts essais autorisés</p>
-
-                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@exam.ExamId">Details</a>
-                        </div>
-                        <div class="card-footer text-muted">
-                            <p>
-                                @String.Format("Date de cloturation : {0:dddd dd MMMM yyyy - HH:mm:ss}", exam.ClosingDate)
-                            </p>
-                        </div>
-                    </div>
-                }
-            </div>
         }
-        else
-        {
-            <div class="card-deck">
 
-                @foreach (var exam in Model)
-                {
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-header">
-                            <h5 class="card-title">@exam.Name</h5>
-                            <a class="badge badge-primary" asp-controller="Modules" asp-action="Details" asp-route-id="@exam.Module.ModuleId">@exam.Module.Title</a>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-muted">@exam.QuestionAmount questions</h6>
-                            <p class="card-text">@exam.Description</p>
-                            <p class="card-text">@exam.AuthorizedAttempts essais autorisés</p>
-                        </div>
-                        <div class="card-footer text-muted">
-                            <p>
-                                @String.Format("Date de cloturation : {0:dddd dd MMMM yyyy - HH:mm:ss}", exam.ClosingDate)
-                            </p>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
+        <div class="row row-cols-3 row-cols-md-2">
+
+            @foreach (var exam in Model)
+            {
+                <div class="col-4 mt-3 mb-3">
+                    <partial Name="_ExamCardPartial" model="@exam"/>
+                </div>
+            }
+        </div>
     }
 </div>
