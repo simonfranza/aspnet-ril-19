@@ -1,0 +1,109 @@
+﻿@model TestGenerator.Web.Models.QuestionCreationViewModel
+
+@{
+    ViewData["Title"] = "Ajouter une question";
+}
+
+<h2>Ajouter une question</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <input asp-for="Text" class="form-control" /> <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuestionType" class="control-label"></label>
+                <select id="questionTypeSelect" asp-for="QuestionType" asp-items="Html.GetEnumSelectList<TestGenerator.Model.Constants.QuestionTypeEnum>()"></select>
+            </div>
+            <!-- Section question Oui / Non -->
+            <div class="form-group answers" id="yesno">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Réponses possibles</th>
+                            <th>Réponse correcte</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><label for="yes">Oui</label></td>
+                            <td><input type="radio" id="yes" name="yesno" value="yes" /></td>
+                        </tr>
+                        <tr>
+                            <td><label for="no">Non</label></td>
+                            <td><input type="radio" id="no" name="yesno" value="no" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Section question Oui / Non -->
+            <!-- Section question choix multiple -->
+            <div class="form-group answers" id="multichoice">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Réponses possibles</th>
+                            <th>Réponse correcte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mcq">
+                        <tr>
+                            <td><input type="text" id="answer-1" /></td>
+                            <td><input type="checkbox" id="isvalid-1" /></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="answer-2" /></td>
+                            <td><input type="checkbox" id="isvalid-2" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button>Ajouter une réponse</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Section question choix multiple -->
+            <!-- Section question choix unique -->
+            <div class="form-group answers" id="singlechoice">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Réponses possibles</th>
+                            <th>Réponse correcte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scq">
+                        <tr>
+                            <td><input type="text" id="answer-1" /></td>
+                            <td><input type="radio" id="isvalid-1" name="singlechoice"/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="answer-2" /></td>
+                            <td><input type="radio" id="isvalid-2" name="singlechoice"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button>Ajouter une réponse</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Section question choix unique -->
+
+
+            <div class="form-group">
+                <input type="submit" value="Ajouter cette question" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Retour à la liste</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
