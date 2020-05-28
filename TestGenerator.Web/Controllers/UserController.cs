@@ -76,16 +76,18 @@ namespace TestGenerator.Web.Controllers
             }
 
             var user = await _userManager.FindByIdAsync(userId);
-            var roleAttributionResult = await _userManager.AddToRoleAsync(user, userViewModel.Email.Contains("@cesi.fr") ? "Admin" : "User");
-
-            if (!roleAttributionResult.Succeeded)
+            if (userViewModel.Email.Contains("@cesi.fr"))
             {
-                foreach (var error in roleAttributionResult.Errors) { 
-                    ModelState.AddModelError("", error.Description); 
-                } 
+                var roleAttributionResult = await _userManager.AddToRoleAsync(user, "Admin");
+
+                if (!roleAttributionResult.Succeeded)
+                {
+                    foreach (var error in roleAttributionResult.Errors) { 
+                        ModelState.AddModelError("", error.Description); 
+                    } 
+                }
             }
-            
-            
+
             return View(userViewModel);
         }
 

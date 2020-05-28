@@ -24,7 +24,7 @@ namespace TestGenerator.UnitTest
         public TestGeneratorContext GetFakeContext()
         {
             var options = new DbContextOptionsBuilder<TestGeneratorContext>()
-                .UseInMemoryDatabase("FakeDatabase")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             var context = new TestGeneratorContext(options);
@@ -174,15 +174,14 @@ namespace TestGenerator.UnitTest
 
             var context = GetFakeContext();
             var exam = fixture.Create<Exam>();
-            exam.ExamId = 4;
 
             context.Exams.Add(exam);
             context.SaveChanges();
 
-            var controller = new ExamsController(GetFakeContext());
+            var controller = new ExamsController(context);
 
             // Act
-            var result = await controller.Details(4);
+            var result = await controller.Details(exam.ExamId);
 
             // Assert
             Assert.IsAssignableFrom<ViewResult>(result);

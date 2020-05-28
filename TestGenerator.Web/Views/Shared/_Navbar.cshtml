@@ -18,10 +18,7 @@
 
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    if (User.IsInRole("Administrator"))
-                    {
-                        <li><a asp-controller="Exams" asp-action="Index">Examens</a></li>
-                    }
+                    <li><a asp-controller="Exams" asp-action="Index">Examens</a></li>
                 }
             </ul>
             <partial name="_LoginPartial" />
