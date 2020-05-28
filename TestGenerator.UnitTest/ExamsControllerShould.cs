@@ -117,5 +117,31 @@ namespace TestGenerator.UnitTest
             Assert.Equal("Exams", ((RedirectToActionResult) result).ControllerName);
             Assert.Equal("Index", ((RedirectToActionResult) result).ActionName);
         }
+
+        [Fact]
+        public async Task Return_Not_Found_On_Details_With_No_Id()
+        {
+            // Arrange
+            var controller = new ExamsController(GetFakeContext());
+
+            // Act
+            var result = await controller.Details(null);
+
+            // Assert
+            Assert.IsAssignableFrom<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task Return_Not_Found_On_Details_When_Id_Doesnt_Match_Any_Existing_Object()
+        {
+            // Arrange
+            var controller = new ExamsController(GetFakeContext());
+
+            // Act
+            var result = await controller.Details(4);
+
+            // Assert
+            Assert.IsAssignableFrom<NotFoundResult>(result);
+        }
     }
 }
