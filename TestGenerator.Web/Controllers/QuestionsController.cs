@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TestGenerator.Model.Data;
 using TestGenerator.Model.Entities;
 using TestGenerator.Web.Models;
@@ -33,6 +34,7 @@ namespace TestGenerator.Web.Controllers
 
             var question = new Question
             {
+                ModuleId = questionViewModel.ModuleId,
                 QuestionType = questionViewModel.QuestionType,
                 Text = questionViewModel.Text,
                 Answers = questionViewModel.Answers
@@ -47,7 +49,15 @@ namespace TestGenerator.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            var questionViewModel = new QuestionCreationViewModel();
+            questionViewModel.Modules = new List<SelectListItem>();
+
+            foreach(Module module in _context.Modules)
+            {
+                questionViewModel.Modules.Add(new SelectListItem { Text = module.Title, Value = "" + module.ModuleId });
+            }
+
+            return View(questionViewModel);
         }
     }
 }

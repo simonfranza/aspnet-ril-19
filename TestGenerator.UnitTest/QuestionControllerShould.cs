@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace TestGenerator.UnitTest
         public TestGeneratorContext GetFakeContext()
         {
             var options = new DbContextOptionsBuilder<TestGeneratorContext>()
-                .UseInMemoryDatabase("FakeDatabase")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             var context = new TestGeneratorContext(options);

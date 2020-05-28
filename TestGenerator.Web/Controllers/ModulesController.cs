@@ -35,10 +35,10 @@ namespace TestGenerator.Web.Controllers
                 Description = moduleViewModel.Description
             };
 
-            var module = await _context.Modules.AddAsync(moduleData);
+            await _context.Modules.AddAsync(moduleData);
             await _context.SaveChangesAsync();
 
-            return RedirectToRoute(new { controller = "Modules", action = "Details", id = module.Entity.ModuleId });
+            return RedirectToRoute(new { controller = "Modules", action = "Details", moduleData.ModuleId });
         }
 
         [HttpGet]
