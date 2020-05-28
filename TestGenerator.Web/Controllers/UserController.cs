@@ -123,7 +123,7 @@ namespace TestGenerator.Web.Controllers
                 return View(model);
             }
 
-            var loginResult = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
+            var loginResult = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, true, false);
 
             if (loginResult == SignInResult.Failed)
             {
