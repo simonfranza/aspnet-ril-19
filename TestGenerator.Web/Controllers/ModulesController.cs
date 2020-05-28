@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestGenerator.Model.Data;
@@ -18,7 +21,11 @@ namespace TestGenerator.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            List<Module> moduleList = _context.Modules
+                .Include(m => m.Exams)
+                .ToList();
+
+            return View(moduleList);
         }
 
         [HttpPost]
@@ -38,7 +45,7 @@ namespace TestGenerator.Web.Controllers
             await _context.Modules.AddAsync(moduleData);
             await _context.SaveChangesAsync();
 
-            return RedirectToRoute(new { controller = "Modules", action = "Details", moduleData.ModuleId });
+            return RedirectToRoute(new { controller = "Modules", action = "Details", id = moduleData.ModuleId });
         }
 
         [HttpGet]

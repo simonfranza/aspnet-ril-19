@@ -311,6 +311,19 @@ namespace TestGenerator.Model.Migrations
                 name: "IX_ExamQuestions_QuestionId",
                 table: "ExamQuestions",
                 column: "QuestionId");
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
+                values: new object[,]
+                {
+                    {
+                        Guid.NewGuid().ToString(),
+                        "Administrator",
+                        "Admin",
+                        Guid.NewGuid().ToString()
+                    }
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
