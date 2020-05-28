@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using TestGenerator.Model.Entities;
 
-namespace TestGenerator.Model.Entities
+namespace TestGenerator.Web.Models
 {
-    public class Exam
+    public class ExamCreationViewModel
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ExamId { get; set; }
-
         [Required]
         [DataType(DataType.Text)]
         [MaxLength(255)]
+        [Display(Name = "Intitulé")]
         public string Name { get; set; }
 
         [DataType(DataType.Text)]
@@ -20,24 +18,25 @@ namespace TestGenerator.Model.Entities
 
         [Required]
         [Range(1, int.MaxValue)]
+        [Display(Name = "Nombre de questions")]
         public int QuestionAmount { get; set; }
 
         [Required]
         [Range(1, int.MaxValue)]
+        [Display(Name = "Nombre d'essais par participant")]
         public int AuthorizedAttempts { get; set; }
 
         [Required]
+        [Display(Name = "Durée (en minutes)")]
         public int Duration { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
+        [Display(Name = "Date de cloturation")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime ClosingDate { get; set; }
 
-        [Required]
-        [Column("ModuleId")]
-        public int ModuleId { get; set; }
-        public Module Module { get; set; }
+        public ICollection<ExamQuestion> ExamQuestions { get; set; }
 
-        public ICollection<ExamQuestion> Questions { get; set; }
+        public ICollection<Question> Questions { get; set; }
     }
 }

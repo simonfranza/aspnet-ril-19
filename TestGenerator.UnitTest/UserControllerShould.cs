@@ -161,11 +161,6 @@ namespace TestGenerator.UnitTest
                 .ReturnsAsync(fixture.Create<User>())
                 .Verifiable();
 
-            userMgrMock
-                .Setup(mgr => mgr.AddToRoleAsync(It.IsNotNull<User>(), "User"))
-                .ReturnsAsync(IdentityResult.Success)
-                .Verifiable();
-
             var controller = new UserController(userMgrMock.Object, signinMgrMock.Object, GetFakeHttpContextAccessor().Object);
             var userViewModel = fixture.Create<UserRegistrationViewModel>();
             userViewModel.Email = "test@viacesi.fr";
@@ -178,7 +173,6 @@ namespace TestGenerator.UnitTest
             Assert.Contains("@viacesi.fr", userViewModel.Email);
             userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
             userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Admin"), Times.Never);
-            userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "User"), Times.Once);
         }
 
         [Fact]

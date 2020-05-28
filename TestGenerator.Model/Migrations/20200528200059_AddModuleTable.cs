@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TestGenerator.Model.Migrations
 {
-    public partial class AjoutTableModules : Migration
+    public partial class AddModuleTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

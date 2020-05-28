@@ -18,6 +18,8 @@ namespace TestGenerator.Model.Entities
         [Required]
         public QuestionTypeEnum QuestionType { get; set; }
 
+        public ICollection<ExamQuestion> Exams { get; set; }
+
         public ICollection<Answer> Answers { get; set; }
 
         [Required]

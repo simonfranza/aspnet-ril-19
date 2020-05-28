@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TestGenerator.Model.Migrations
 {
-    public partial class DbInit : Migration
+    public partial class DbSetup : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,11 +76,26 @@ namespace TestGenerator.Model.Migrations
                     Description = table.Column<string>(nullable: true),
                     QuestionAmount = table.Column<int>(nullable: false),
                     AuthorizedAttempts = table.Column<int>(nullable: false),
+                    Duration = table.Column<int>(nullable: false),
                     ClosingDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Exams", x => x.ExamId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    QuestionId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Text = table.Column<string>(maxLength: 255, nullable: false),
+                    QuestionType = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.QuestionId);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,25 +220,6 @@ namespace TestGenerator.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Questions",
-                columns: table => new
-                {
-                    QuestionId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ExamId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Questions", x => x.QuestionId);
-                    table.ForeignKey(
-                        name: "FK_Questions_Exams_ExamId",
-                        column: x => x.ExamId,
-                        principalTable: "Exams",
-                        principalColumn: "ExamId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Answers",
                 columns: table => new
                 {
@@ -238,6 +234,29 @@ namespace TestGenerator.Model.Migrations
                     table.PrimaryKey("PK_Answers", x => x.AnswerId);
                     table.ForeignKey(
                         name: "FK_Answers_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "QuestionId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamQuestions",
+                columns: table => new
+                {
+                    ExamId = table.Column<int>(nullable: false),
+                    QuestionId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamQuestions", x => new { x.ExamId, x.QuestionId });
+                    table.ForeignKey(
+                        name: "FK_ExamQuestions_Exams_ExamId",
+                        column: x => x.ExamId,
+                        principalTable: "Exams",
+                        principalColumn: "ExamId");
+                    table.ForeignKey(
+                        name: "FK_ExamQuestions_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "QuestionId",
@@ -289,9 +308,9 @@ namespace TestGenerator.Model.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_ExamId",
-                table: "Questions",
-                column: "ExamId");
+                name: "IX_ExamQuestions_QuestionId",
+                table: "ExamQuestions",
+                column: "QuestionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -318,10 +337,10 @@ namespace TestGenerator.Model.Migrations
                 name: "ExamAttempts");
 
             migrationBuilder.DropTable(
-                name: "UserAnswers");
+                name: "ExamQuestions");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "UserAnswers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -331,6 +350,9 @@ namespace TestGenerator.Model.Migrations
 
             migrationBuilder.DropTable(
                 name: "Exams");
+
+            migrationBuilder.DropTable(
+                name: "Questions");
         }
     }
 }

@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TestGenerator.Model.Entities
+
+@model IEnumerable<Exam>
+
+@inject SignInManager<User> SignInManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Examens</h2>
+
+<div class="container">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        if (User.IsInRole("Administrator"))
+        {
+            <p>
+                <a class="btn btn-primary" asp-action="Create">Créer un examen</a>
+            </p>
+            <div class="card-deck">
+            
+                @foreach (var exam in Model)
+                {
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-header">
+                            <h5 class="card-title">@exam.Name</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">@exam.QuestionAmount questions</h6>
+                            <p class="card-text">@exam.Description</p>
+                            <p class="card-text">@exam.AuthorizedAttempts essais autorisés</p>
+
+                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@exam.ExamId">Details</a>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <p>
+                                @String.Format("Date de cloturation : {0:dddd dd MMMM yyyy - HH:mm:ss}", exam.ClosingDate)
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="card-deck">
+
+                @foreach (var exam in Model)
+                {
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-header">
+                            <h5 class="card-title">@exam.Name</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">@exam.QuestionAmount questions</h6>
+                            <p class="card-text">@exam.Description</p>
+                            <p class="card-text">@exam.AuthorizedAttempts essais autorisés</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <p>
+                                @String.Format("Date de cloturation : {0:dddd dd MMMM yyyy - HH:mm:ss}", exam.ClosingDate)
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
