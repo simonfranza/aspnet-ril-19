@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using TestGenerator.Model.Data;
 using TestGenerator.Model.Entities;
 using TestGenerator.Web.Models;
@@ -20,7 +21,11 @@ namespace TestGenerator.Web.Controllers
 
         public IActionResult Index()
         {
-            return View(_context.Questions.ToList());
+            var questionList = _context.Questions
+                .Include(e => e.Module)
+                .ToList();
+
+            return View(questionList);
         }
 
         [HttpPost]
