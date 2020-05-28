@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using TestGenerator.Model.Entities;
 
 namespace TestGenerator.Web.Models
 {
@@ -28,13 +27,16 @@ namespace TestGenerator.Web.Models
         public int AuthorizedAttempts { get; set; }
 
         [Required]
-        [DataType(DataType.Time)]
-        [Display(Name = "Durée")]
+        [Display(Name = "Durée (en minutes)")]
         public int Duration { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Date de clôture")]
+        [Display(Name = "Date de cloturation")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime ClosingDate { get; set; }
+
+        public ICollection<ExamQuestion> ExamQuestions { get; set; }
+
+        public ICollection<Question> Questions { get; set; }
     }
 }

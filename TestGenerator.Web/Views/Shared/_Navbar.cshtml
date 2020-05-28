@@ -15,6 +15,14 @@
                 <li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    if (User.IsInRole("Administrator"))
+                    {
+                        <li><a asp-controller="Exams" asp-action="Index">Examens</a></li>
+                    }
+                }
             </ul>
             <partial name="_LoginPartial" />
         </div>

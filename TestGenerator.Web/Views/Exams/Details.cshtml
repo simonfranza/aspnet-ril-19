@@ -1,0 +1,48 @@
+﻿@model TestGenerator.Model.Entities.Exam
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Module</h4>
+    <hr />
+    <div class="row">
+        <dl class="dl-horizontal col-md-4">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+        </dl>
+        <dl class="dl-horizontal col-md-8">
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        </dl>
+    </div>
+    <div class="row">
+        <dl class="dl-horizontal col-md-6">
+            <dt>
+                @Html.DisplayNameFor(model => model.Questions)
+            </dt>
+            <dd>
+                <ul>
+                    @foreach (TestGenerator.Model.Entities.ExamQuestion question in Model.Questions)
+                    {
+                        <li>@question.Question.Text</li>
+                    }
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Retour à la liste</a>
+</div>

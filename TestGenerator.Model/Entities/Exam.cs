@@ -27,14 +27,12 @@ namespace TestGenerator.Model.Entities
         public int AuthorizedAttempts { get; set; }
 
         [Required]
-        [DataType(DataType.Time)]
         public int Duration { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime ClosingDate { get; set; }
 
-        [Required]
-        public ICollection<Question> Questions { get; set; }
+        public ICollection<ExamQuestion> Questions { get; set; }
     }
 }
