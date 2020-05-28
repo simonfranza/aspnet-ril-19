@@ -17,6 +17,8 @@ $(function () {
                 break;
             case '2': $('#multichoice').show();
                 break;
+            case '3': $('#cloze').show();
+                break;
         }
     });
 });
