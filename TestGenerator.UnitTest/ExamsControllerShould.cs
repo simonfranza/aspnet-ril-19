@@ -49,6 +49,25 @@ namespace TestGenerator.UnitTest
         }
 
         [Fact]
+        public async Task Return_Bad_Request_Result_When_QuestionAmount_Is_Higher_Than_Available_Questions_Amount()
+        {
+            // Arrange
+            var context = GetFakeContext();
+            context.Questions.RemoveRange(context.Questions.ToList());
+
+            var controller = new ExamsController(context);
+            var viewModel = new ExamCreationViewModel();
+            viewModel.QuestionAmount = int.MaxValue;
+
+            // Act
+            var result = await controller.Create(viewModel);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<SerializableError>(badRequestResult.Value);
+        }
+
+        [Fact]
         public void Throw_ArgumentException_When_Calling_Retrieve_Questions_With_Non_Positive_Limit_Argument()
         {
             // Arrange
@@ -142,6 +161,31 @@ namespace TestGenerator.UnitTest
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task Return_View_On_Details_When_Id_Matches_An_Existing_Object()
+        {
+            // Arrange
+            var fixture = new Fixture();
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            var context = GetFakeContext();
+            var exam = fixture.Create<Exam>();
+            exam.ExamId = 4;
+
+            context.Exams.Add(exam);
+            context.SaveChanges();
+
+            var controller = new ExamsController(GetFakeContext());
+
+            // Act
+            var result = await controller.Details(4);
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResult>(result);
         }
     }
 }
