@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Moq.Language.Flow;
 using TestGenerator.Model.Data;
 using TestGenerator.Model.Entities;
 using TestGenerator.Web.Controllers;
@@ -26,11 +28,6 @@ namespace TestGenerator.UnitTest
                 .Options;
 
             var context = new TestGeneratorContext(options);
-
-            var fixture = new Fixture();
-            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
-                .ForEach(b => fixture.Behaviors.Remove(b));
-            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
             return context;
         }
@@ -52,7 +49,7 @@ namespace TestGenerator.UnitTest
         }
 
         [Fact]
-        public void Throws_ArgumentException_When_Calling_Retrieve_Questions_With_Non_Positive_Limit_Argument()
+        public void Throw_ArgumentException_When_Calling_Retrieve_Questions_With_Non_Positive_Limit_Argument()
         {
             // Arrange
             var controller = new ExamsController (GetFakeContext());
@@ -67,29 +64,58 @@ namespace TestGenerator.UnitTest
         }
 
         [Fact]
-        public async Task Retrieve_X_Questions_When_User_Inputs_X_To_The_QuestionsAmount_Field()
+        public void Return_List_Of_ExamQuestion_Object_The_Same_Size_As_Parameter_List()
         {
             // Arrange
             var fixture = new Fixture();
-            var context = GetFakeContext();
-            context.Questions.AddRange(fixture.CreateMany<Question>(15));
-            context.SaveChanges();
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-            var controllerMock = new Mock<ExamsController>(context);
-
-            controllerMock
-                .Setup(ctrl => ctrl.RetrieveQuestions(12))
-                .Returns(Mock.Of<List<Question>>())
-                .Verifiable();
-
-            var viewModel = fixture.Create<ExamCreationViewModel>();
-            viewModel.QuestionAmount = 12;
+            var controller = new ExamsController (GetFakeContext());
+            var questionList = fixture.CreateMany<Question>(7).ToList();
 
             // Act
-            await controllerMock.Object.Create(viewModel);
+            var result = controller.GenerateQuestionsToExamFromQuestionListAndExam(fixture.Create<Exam>(), questionList);
 
             // Assert
-            controllerMock.Verify(c => c.RetrieveQuestions(12), Times.Once);
+            Assert.IsAssignableFrom<List<ExamQuestion>>(result);
+            Assert.IsAssignableFrom<List<Question>>(questionList);
+            Assert.Equal(questionList.Count, result.Count);
+        }
+
+        [Fact]
+        public async Task Redirect_To_Index_After_Successful_Creation()
+        {
+            // Arrange
+            var fixture = new Fixture();
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            var context = GetFakeContext();
+            var examDbSetMock = new Mock<DbSet<Exam>>();
+            var examQuestionDbSetMock = new Mock<DbSet<ExamQuestion>>();
+
+            context.Questions.AddRange(fixture.CreateMany<Question>(7).ToList());
+            context.Exams = examDbSetMock.Object;
+            context.ExamQuestions = examQuestionDbSetMock.Object;
+            context.SaveChanges();
+
+            var controller = new ExamsController (context);
+            var viewModel = fixture.Create<ExamCreationViewModel>();
+            viewModel.QuestionAmount = 3;
+
+            // Act
+            var result = await controller.Create(viewModel);
+
+            // Assert
+            examDbSetMock.Verify(dbSet => dbSet.AddAsync(It.IsNotNull<Exam>(), default), Times.Once);
+            examQuestionDbSetMock.Verify(dbSet => dbSet.AddRangeAsync(It.IsNotNull<ICollection<ExamQuestion>>(), default), Times.Once);
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            Assert.Equal("Exams", ((RedirectToActionResult) result).ControllerName);
+            Assert.Equal("Index", ((RedirectToActionResult) result).ActionName);
         }
     }
 }

@@ -30,7 +30,6 @@ namespace TestGenerator.Web.Controllers
         [Authorize(Roles="Administrator")]
         public IActionResult Create()
         {
-            
             return View(new ExamCreationViewModel
             {
                 Questions = _context.Questions.ToList(),
