@@ -12,6 +12,7 @@ namespace TestGenerator.Model.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
         public DbSet<ExamAttempt> ExamAttempts { get; set; }
+        public DbSet<Module> Modules { get; set; }
 
         public TestGeneratorContext(DbContextOptions<TestGeneratorContext> options)
             : base(options)

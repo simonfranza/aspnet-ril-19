@@ -10,5 +10,10 @@ namespace TestGenerator.Model.Entities
         public int QuestionId { get; set; }
 
         public ICollection<Answer> Answers { get; set; }
+
+        [Required]
+        [Column("ModuleId")]
+        public int ModuleId { get; set; }
+        public Module Module { get; set; }
     }
 }
