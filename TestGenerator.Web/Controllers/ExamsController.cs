@@ -21,9 +21,25 @@ namespace TestGenerator.Web.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Exams.ToList());
+            List<Exam> examList = null;
+
+            if (this.User.IsInRole("Administrator"))
+            {
+                examList = _context.Exams
+                    .Include(e => e.Questions)
+                    .ThenInclude(e => e.Question)
+                    .ToList();
+            }
+            else
+            {
+                examList = _context.Exams
+                    .Where(e => e.ClosingDate > DateTime.Now)
+                    .ToList();
+            }
+
+            return View(examList);
         }
 
         [HttpGet]
