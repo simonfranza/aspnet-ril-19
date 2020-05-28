@@ -8,7 +8,7 @@
 
 <div>
     <div class="row">
-        <dl class="dl-horizontal col-md-4">
+        <dl class="dl-horizontal col-md-3">
             <dt>
                 @Html.DisplayNameFor(model => model.Name)
             </dt>
@@ -16,7 +16,15 @@
                 @Html.DisplayFor(model => model.Name)
             </dd>
         </dl>
-        <dl class="dl-horizontal col-md-8">
+        <dl class="dl-horizontal col-md-3">
+            <dt>
+                @Html.DisplayNameFor(model => model.Module)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Module.Title)
+            </dd>
+        </dl>
+        <dl class="dl-horizontal col-md-6">
             <dt>
                 @Html.DisplayNameFor(model => model.Description)
             </dt>

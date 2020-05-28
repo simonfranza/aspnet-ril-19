@@ -1,0 +1,62 @@
+﻿@model TestGenerator.Model.Entities.Module
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Module</h4>
+    <hr />
+    <div class="row">
+        <dl class="dl-horizontal col-md-4">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+        </dl>
+        <dl class="dl-horizontal col-md-8">
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        </dl>
+    </div>
+    <div class="row">
+        <dl class="dl-horizontal col-md-6">
+            <dt>
+                @Html.DisplayNameFor(model => model.Exams)
+            </dt>
+            <dd>
+                <ul>
+                    @foreach (TestGenerator.Model.Entities.Exam exam in Model.Exams)
+                    {
+                    <li>@exam.Name</li>
+                    }
+                </ul>
+            </dd>
+        </dl>
+        <dl class="dl-horizontal col-md-6">
+            <dt>
+                @Html.DisplayNameFor(model => model.Questions)
+            </dt>
+            <dd>
+                <ul>
+                    @foreach (TestGenerator.Model.Entities.Question question in Model.Questions)
+                    {
+                        <li>@question.Text</li>
+                    }
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ModuleId">Modifier</a> |
+    <a asp-action="Index">Retour à la liste</a>
+</div>

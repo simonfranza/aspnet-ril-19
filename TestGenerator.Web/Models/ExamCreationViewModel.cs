@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TestGenerator.Model.Entities;
@@ -38,5 +39,11 @@ namespace TestGenerator.Web.Models
         public ICollection<ExamQuestion> ExamQuestions { get; set; }
 
         public ICollection<Question> Questions { get; set; }
+
+        [Required(ErrorMessage = "L'examen doit appartenir à un module.")]
+        [Display(Name = "Module de cours")]
+        public int ModuleId { get; set; }
+
+        public List<SelectListItem> Modules { get; set; }
     }
 }

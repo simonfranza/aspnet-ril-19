@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +20,12 @@ namespace TestGenerator.Web.Models
         [Required(ErrorMessage ="La question doit avoir un type.")]
         [Display(Name = "Type de question")]
         public QuestionTypeEnum QuestionType { get; set; }
+
+        [Required(ErrorMessage ="La question doit appartenir à un module.")]
+        [Display(Name ="Module de cours")]
+        public int ModuleId { get; set; }
+
+        public List<SelectListItem> Modules { get; set; }
 
         public ICollection<Answer> Answers { get; set; }
     }

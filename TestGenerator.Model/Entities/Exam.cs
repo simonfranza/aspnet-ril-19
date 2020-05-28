@@ -33,6 +33,11 @@ namespace TestGenerator.Model.Entities
         [DataType(DataType.DateTime)]
         public DateTime ClosingDate { get; set; }
 
+        [Required]
+        [Column("ModuleId")]
+        public int ModuleId { get; set; }
+        public Module Module { get; set; }
+
         public ICollection<ExamQuestion> Questions { get; set; }
     }
 }

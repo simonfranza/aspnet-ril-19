@@ -168,6 +168,9 @@ namespace TestGenerator.Model.Migrations
 
                     b.Property<int>("Duration");
 
+                    b.Property<int>("ModuleId")
+                        .HasColumnName("ModuleId");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -175,6 +178,8 @@ namespace TestGenerator.Model.Migrations
                     b.Property<int>("QuestionAmount");
 
                     b.HasKey("ExamId");
+
+                    b.HasIndex("ModuleId");
 
                     b.ToTable("Exams");
                 });
@@ -215,11 +220,31 @@ namespace TestGenerator.Model.Migrations
                     b.ToTable("ExamQuestions");
                 });
 
+            modelBuilder.Entity("TestGenerator.Model.Entities.Module", b =>
+                {
+                    b.Property<int>("ModuleId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("ModuleId");
+
+                    b.ToTable("Modules");
+                });
+
             modelBuilder.Entity("TestGenerator.Model.Entities.Question", b =>
                 {
                     b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnName("ModuleId");
 
                     b.Property<int>("QuestionType");
 
@@ -228,6 +253,8 @@ namespace TestGenerator.Model.Migrations
                         .HasMaxLength(255);
 
                     b.HasKey("QuestionId");
+
+                    b.HasIndex("ModuleId");
 
                     b.ToTable("Questions");
                 });
@@ -367,6 +394,14 @@ namespace TestGenerator.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("TestGenerator.Model.Entities.Exam", b =>
+                {
+                    b.HasOne("TestGenerator.Model.Entities.Module", "Module")
+                        .WithMany("Exams")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("TestGenerator.Model.Entities.ExamQuestion", b =>
                 {
                     b.HasOne("TestGenerator.Model.Entities.Exam", "Exam")
@@ -377,6 +412,14 @@ namespace TestGenerator.Model.Migrations
                     b.HasOne("TestGenerator.Model.Entities.Question", "Question")
                         .WithMany("Exams")
                         .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TestGenerator.Model.Entities.Question", b =>
+                {
+                    b.HasOne("TestGenerator.Model.Entities.Module", "Module")
+                        .WithMany("Questions")
+                        .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

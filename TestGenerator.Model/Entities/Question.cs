@@ -21,5 +21,10 @@ namespace TestGenerator.Model.Entities
         public ICollection<ExamQuestion> Exams { get; set; }
 
         public ICollection<Answer> Answers { get; set; }
+
+        [Required]
+        [Column("ModuleId")]
+        public int ModuleId { get; set; }
+        public Module Module { get; set; }
     }
 }

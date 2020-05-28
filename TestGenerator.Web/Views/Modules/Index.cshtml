@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TestGenerator.Model.Entities
+
+@model IEnumerable<Module>
+
+@inject SignInManager<User> SignInManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Modules</h2>
+
+<div class="container">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        if (User.IsInRole("Administrator"))
+        {
+            <p>
+                <a class="btn btn-primary" asp-action="Create">Créer un module</a>
+            </p>
+        }
+            <div class="card-deck">
+            
+                @foreach (var module in Model)
+                {
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-header">
+                            <h5 class="card-title">@module.Title</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@module.Description</p>
+
+                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@module.ModuleId">Details</a>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <h6 class="card-subtitle mb-2 text-muted">@module.Exams.Count examens</h6>
+                        </div>
+                    </div>
+                }
+            </div>
+    }
+</div>

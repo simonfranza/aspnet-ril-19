@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestGenerator.Model.Data;
 using TestGenerator.Model.Entities;
@@ -30,6 +31,7 @@ namespace TestGenerator.Web.Controllers
                 examList = _context.Exams
                     .Include(e => e.Questions)
                     .ThenInclude(e => e.Question)
+                    .Include(e => e.Module)
                     .ToList();
             }
             else
@@ -46,10 +48,13 @@ namespace TestGenerator.Web.Controllers
         [Authorize(Roles="Administrator")]
         public IActionResult Create()
         {
-            return View(new ExamCreationViewModel
-            {
-                Questions = _context.Questions.ToList(),
-            });
+            var viewModel = new ExamCreationViewModel();
+            viewModel.Questions = _context.Questions.ToList();
+            viewModel.Modules = _context.Modules
+                .Select(module => new SelectListItem {Text = module.Title, Value = "" + module.ModuleId})
+                .ToList();
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -66,6 +71,7 @@ namespace TestGenerator.Web.Controllers
 
             var exam = new Exam
             {
+                ModuleId = viewModel.ModuleId,
                 Name = viewModel.Name,
                 Description = viewModel.Description,
                 QuestionAmount = viewModel.QuestionAmount,
@@ -94,6 +100,7 @@ namespace TestGenerator.Web.Controllers
             var exam = await _context.Exams
                 .Include(e => e.Questions)
                 .ThenInclude(e => e.Question)
+                .Include(e => e.Module)
                 .FirstOrDefaultAsync(e => e.ExamId == id);
 
             if (exam == null)
