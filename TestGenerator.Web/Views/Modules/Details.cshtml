@@ -1,6 +1,6 @@
 ﻿@model TestGenerator.Model.Entities.Module
 
-@{ ViewData["Title"] = "Details"; }
+@{ ViewData["Title"] = string.Format("{0} - Details", @Model.Title); }
 
 <h2>@Model.Title</h2>
 <p class="text-muted">@Model.Description</p>
