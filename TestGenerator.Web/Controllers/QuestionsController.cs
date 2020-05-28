@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TestGenerator.Model.Data;
 using TestGenerator.Model.Entities;
+using TestGenerator.Web.Models;
 
 namespace TestGenerator.Web.Controllers
 {
@@ -17,42 +18,36 @@ namespace TestGenerator.Web.Controllers
             _context = context;
         }
 
-        public List<Question> RetrieveQuestions(int limit = -1, bool random = false )
+        public IActionResult Index()
         {
-            var resultList = new List<Question>();
+            return View(_context.Questions.ToList());
+        }
 
-            if (limit > 0)
+        [HttpPost]
+        public async Task<IActionResult> Create(QuestionCreationViewModel questionViewModel)
+        {
+            if (!ModelState.IsValid)
             {
-                if (random)
-                {
-                    resultList = _context.Questions
-                        .OrderBy(r => Guid.NewGuid())
-                        .Take(limit)
-                        .ToList();
-                }
-                else
-                {
-                    resultList = _context.Questions
-                        .Take(limit)
-                        .ToList();
-                }
-            }
-            else
-            {
-                if (random)
-                {
-                    resultList = _context.Questions
-                        .OrderBy(r => Guid.NewGuid())
-                        .ToList();
-                }
-                else
-                {
-                    resultList = _context.Questions
-                        .ToList();
-                }
+                return BadRequest(ModelState);
             }
 
-            return resultList;
+            var question = new Question
+            {
+                QuestionType = questionViewModel.QuestionType,
+                Text = questionViewModel.Text,
+                Answers = questionViewModel.Answers
+            };
+
+            await _context.Questions.AddAsync(question);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
         }
     }
 }

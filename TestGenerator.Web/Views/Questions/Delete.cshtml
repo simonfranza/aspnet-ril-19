@@ -1,0 +1,21 @@
+﻿@model TestGenerator.Model.Entities.Question
+
+@{
+    ViewData["Title"] = "Supprimer une question";
+}
+
+<h2>Supprimer une question</h2>
+
+<h3>Êtes-vous sûr de vouloir supprimer cette question?</h3>
+<div>
+    <h4>Question</h4>
+    <hr />
+    <dl class="dl-horizontal">
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="QuestionId" />
+        <input type="submit" value="Supprimer" class="btn btn-default" /> |
+        <a asp-action="Index">Retour à la liste</a>
+    </form>
+</div>
