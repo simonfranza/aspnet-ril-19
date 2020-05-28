@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -51,25 +52,44 @@ namespace TestGenerator.UnitTest
         }
 
         [Fact]
+        public void Throws_ArgumentException_When_Calling_Retrieve_Questions_With_Non_Positive_Limit_Argument()
+        {
+            // Arrange
+            var controller = new ExamsController (GetFakeContext());
+
+            // Act
+            var positiveResult = controller.RetrieveQuestions(1);
+
+            // Assert
+            Assert.IsAssignableFrom<List<Question>>(positiveResult);
+            Assert.Throws<ArgumentException>(() => controller.RetrieveQuestions(0));
+            Assert.Throws<ArgumentException>(() => controller.RetrieveQuestions(-1));
+        }
+
+        [Fact]
         public async Task Retrieve_X_Questions_When_User_Inputs_X_To_The_QuestionsAmount_Field()
         {
             // Arrange
             var fixture = new Fixture();
             var context = GetFakeContext();
-            var questionsDbSetMock = new Mock<DbSet<Question>>();
+            context.Questions.AddRange(fixture.CreateMany<Question>(15));
+            context.SaveChanges();
 
-            context.Questions = questionsDbSetMock.Object;
+            var controllerMock = new Mock<ExamsController>(context);
+
+            controllerMock
+                .Setup(ctrl => ctrl.RetrieveQuestions(12))
+                .Returns(Mock.Of<List<Question>>())
+                .Verifiable();
 
             var viewModel = fixture.Create<ExamCreationViewModel>();
             viewModel.QuestionAmount = 12;
 
-            var controller = new ExamsController(GetFakeContext());
-
             // Act
-            await controller.Create(viewModel);
+            await controllerMock.Object.Create(viewModel);
 
             // Assert
-            questionsDbSetMock.Verify(dbSet => dbSet.OrderBy(It.IsAny<Func<Question, It.IsAnyType>>()).Take(12).ToList(), Times.Never);
+            controllerMock.Verify(c => c.RetrieveQuestions(12), Times.Once);
         }
     }
 }

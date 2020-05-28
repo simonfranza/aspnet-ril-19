@@ -42,10 +42,7 @@ namespace TestGenerator.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var selectedQuestions = _context.Questions
-                .OrderBy(r => Guid.NewGuid())
-                .Take(viewModel.QuestionAmount)
-                .ToList();
+            var selectedQuestions = RetrieveQuestions(viewModel.QuestionAmount);
 
             await _context.Exams.AddAsync(new Exam()
             {
@@ -59,6 +56,19 @@ namespace TestGenerator.Web.Controllers
             });
 
             return View(viewModel);
+        }
+
+        public virtual List<Question> RetrieveQuestions(int limit)
+        {
+            if (limit < 1)
+            {
+                throw new ArgumentException("Limit parameter must be greater than 0");
+            }
+
+            return _context.Questions
+                .OrderBy(r => Guid.NewGuid())
+                .Take(limit)
+                .ToList();
         }
     }
 }
