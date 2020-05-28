@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestGenerator.Model.Data;
 
 namespace TestGenerator.Model.Migrations
 {
     [DbContext(typeof(TestGeneratorContext))]
-    partial class TestGeneratorContextModelSnapshot : ModelSnapshot
+    [Migration("20200528122019_ExamFieldUpdate")]
+    partial class ExamFieldUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,26 +202,13 @@ namespace TestGenerator.Model.Migrations
                     b.ToTable("ExamAttempts");
                 });
 
-            modelBuilder.Entity("TestGenerator.Model.Entities.ExamQuestion", b =>
-                {
-                    b.Property<int>("ExamId")
-                        .HasColumnName("ExamId");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnName("QuestionId");
-
-                    b.HasKey("ExamId", "QuestionId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("ExamQuestions");
-                });
-
             modelBuilder.Entity("TestGenerator.Model.Entities.Question", b =>
                 {
                     b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExamId");
 
                     b.Property<int>("QuestionType");
 
@@ -228,6 +217,8 @@ namespace TestGenerator.Model.Migrations
                         .HasMaxLength(255);
 
                     b.HasKey("QuestionId");
+
+                    b.HasIndex("ExamId");
 
                     b.ToTable("Questions");
                 });
@@ -367,17 +358,11 @@ namespace TestGenerator.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TestGenerator.Model.Entities.ExamQuestion", b =>
+            modelBuilder.Entity("TestGenerator.Model.Entities.Question", b =>
                 {
-                    b.HasOne("TestGenerator.Model.Entities.Exam", "Exam")
+                    b.HasOne("TestGenerator.Model.Entities.Exam")
                         .WithMany("Questions")
-                        .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("TestGenerator.Model.Entities.Question", "Question")
-                        .WithMany("Exams")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ExamId");
                 });
 #pragma warning restore 612, 618
         }

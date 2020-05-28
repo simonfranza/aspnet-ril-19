@@ -12,6 +12,8 @@ namespace TestGenerator.Model.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
         public DbSet<ExamAttempt> ExamAttempts { get; set; }
+        public DbSet<ExamQuestion> ExamQuestions { get; set; }
+
 
         public TestGeneratorContext(DbContextOptions<TestGeneratorContext> options)
             : base(options)
@@ -21,6 +23,23 @@ namespace TestGenerator.Model.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<ExamQuestion>()
+                .HasKey(examQuestion => new
+                {
+                    examQuestion.ExamId,
+                    examQuestion.QuestionId
+                });
+
+            builder.Entity<ExamQuestion>()
+                .HasOne(examQuestion => examQuestion.Exam)
+                .WithMany(exam => exam.Questions)
+                .HasForeignKey(examQuestion => examQuestion.ExamId);
+
+            builder.Entity<ExamQuestion>()
+                .HasOne(examQuestion => examQuestion.Question)
+                .WithMany(question => question.Exams)
+                .HasForeignKey(examQuestion => examQuestion.QuestionId);
         }
     }
 }

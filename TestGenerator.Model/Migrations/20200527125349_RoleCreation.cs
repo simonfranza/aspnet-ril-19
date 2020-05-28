@@ -17,12 +17,6 @@ namespace TestGenerator.Model.Migrations
                         "Administrator",
                         "Admin",
                         Guid.NewGuid().ToString()
-                    },
-                    {
-                        Guid.NewGuid().ToString(),
-                        "User",
-                        "User",
-                        Guid.NewGuid().ToString()
                     }
                 });
         }

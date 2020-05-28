@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestGenerator.Model.Data;
 
 namespace TestGenerator.Model.Migrations
 {
     [DbContext(typeof(TestGeneratorContext))]
-    partial class TestGeneratorContextModelSnapshot : ModelSnapshot
+    [Migration("20200528165240_createExamQuestionTable")]
+    partial class createExamQuestionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

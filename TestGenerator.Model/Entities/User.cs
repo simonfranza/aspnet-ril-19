@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
-using TestGenerator.Model.Constants;
-
 
 namespace TestGenerator.Model.Entities
 {
