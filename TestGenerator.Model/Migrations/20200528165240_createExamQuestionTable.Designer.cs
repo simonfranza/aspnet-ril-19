@@ -10,8 +10,8 @@ using TestGenerator.Model.Data;
 namespace TestGenerator.Model.Migrations
 {
     [DbContext(typeof(TestGeneratorContext))]
-    [Migration("20200528134413_examQuestion")]
-    partial class examQuestion
+    [Migration("20200528165240_createExamQuestionTable")]
+    partial class createExamQuestionTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
