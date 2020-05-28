@@ -206,6 +206,12 @@ namespace TestGenerator.Model.Migrations
 
                     b.Property<int?>("ExamId");
 
+                    b.Property<int>("QuestionType");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
                     b.HasKey("QuestionId");
 
                     b.HasIndex("ExamId");
