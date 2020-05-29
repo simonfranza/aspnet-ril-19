@@ -29,7 +29,7 @@ namespace TestGenerator.Model.Helpers
         /// <returns>Generated HTML</returns>
         public static IHtmlContent EditorForMany<TModel, TValue>(this IHtmlHelper<TModel> html,
             Expression<Func<TModel, IEnumerable<TValue>>> propertyExpression,
-            Expression<Func<TValue, string>> indexResolverExpression = null, bool includeIndexField = true)
+            Expression<Func<TValue, string>> indexResolverExpression = null, bool includeIndexField = true, string templateName = null)
             where TModel : class
         {
             var items = propertyExpression.Compile()(html.ViewData.Model);
@@ -69,7 +69,7 @@ namespace TestGenerator.Model.Helpers
                     AppendHtml(indexHtml, htmlBuilder);
                 }
 
-                IHtmlContent itemHtml = html.EditorFor(singleItemExp, null, $"{htmlFieldName}[{guid}]");
+                IHtmlContent itemHtml = html.EditorFor(singleItemExp, templateName, $"{htmlFieldName}[{guid}]");
                 AppendHtml(itemHtml, htmlBuilder);
             }
 

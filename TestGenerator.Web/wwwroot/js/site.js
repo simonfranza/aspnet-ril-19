@@ -21,14 +21,13 @@ $(function () {
     });
 
     $('#add-single-choice').on('click', function () {
-        $('#scq').append('<tr>\
-            <td><input class="form-control" type="text" id="answer-2" /></td>\
-            <td><input class="form-control" type="radio" id="isvalid-2" name="singlechoice" /></td>\
-        </tr>');
+        jQuery.get('/Questions/AddSingleAnswer').done(function (html) {
+            $('#scq').append(html);
+        });
     });
 
     $('#add-multi-choice').on('click', function () {
-        jQuery.get('/Questions/AddAnswer').done(function (html) {
+        jQuery.get('/Questions/AddMultiAnswer').done(function (html) {
             $('#mcq').append(html);
         });
     });

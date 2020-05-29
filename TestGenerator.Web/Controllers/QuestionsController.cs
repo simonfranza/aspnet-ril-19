@@ -50,7 +50,7 @@ namespace TestGenerator.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddAnswer()
+        public IActionResult AddMultiAnswer()
         {
             var viewModel = new QuestionCreationViewModel { Answers = new List<Answer>() };
             viewModel.Answers.Add(new Answer());
