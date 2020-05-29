@@ -9,7 +9,7 @@
     <h1>Créer un examen</h1>
 
     <div class="row mt-3">
-        <div class="col-md-4">
+        <div class="col-md-6">
             @if (Model.Questions.Count == 0)
             {
                 <p>Aucune question n'existe, il est donc impossible de créer un examen.</p>
@@ -51,6 +51,7 @@
                     <div class="form-group">
                         <label asp-for="ClosingDate" class="control-label"></label>
                         <input asp-for="ClosingDate" type="date" min="@{ DateTime.Now.Date.ToString("yyyy-MM-dd"); }" value="@{ (DateTime.Now).Date.ToString("yyyy-MM-dd"); }" class="form-control" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
+                        <small>La date doit être supérieure ou égale à aujourd'hui (@DateTime.Today.ToString("D"))</small>
                         <span asp-validation-for="ClosingDate" class="text-danger"></span>
                     </div>
                     <div class="form-group mt-4">
