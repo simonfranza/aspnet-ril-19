@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TestGenerator.Model.Entities
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="User" asp-action="Logout">Se déconnecter</a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="User" asp-action="Register">S'inscrire</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="User" asp-action="Login">Se connecter</a>
+    </li>
+}

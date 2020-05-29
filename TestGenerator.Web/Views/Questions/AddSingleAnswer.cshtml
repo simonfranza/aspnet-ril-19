@@ -1,0 +1,10 @@
+﻿@model TestGenerator.Web.Models.QuestionCreationViewModel
+@using TestGenerator.Model.Helpers
+
+@{
+    Layout = null;
+}
+
+    <tr>
+        @Html.EditorForMany(x => x.Answers, x => x.Index, true, "SingleAnswer")
+    </tr>

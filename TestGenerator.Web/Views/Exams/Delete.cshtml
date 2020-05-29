@@ -1,0 +1,28 @@
+﻿@using TestGenerator.Model.Entities
+@model Exam
+
+
+@{ ViewData["Title"] = $"{Model.Name} - Suppression"; }
+
+<div class="row mt-5 justify-content-center">
+    <div class="col-10">
+        <h2>Voulez-vous vraiment supprimer l'examen "@Model.Name" ?</h2>
+        <hr />
+        <h3>Les éléments suivants seront également supprimés : </h3>
+
+        <h4 class="mt-5">Questions</h4>
+        <ul>
+            @foreach (var question in @Model.Questions)
+            {
+<li>@question.Question.Text</li>            }
+        </ul>
+
+        <hr class="mt-5" />
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="ModuleId" />
+            <input class="btn btn-danger" type="submit" value="Supprimer l'examen" />
+            <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+        </form>
+    </div>
+</div>

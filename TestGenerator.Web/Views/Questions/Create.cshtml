@@ -1,0 +1,86 @@
+﻿@using TestGenerator.Model.Helpers
+@using TestGenerator.Web.Models
+@model QuestionCreationViewModel
+
+
+@{ ViewData["Title"] = "Ajouter une question"; }
+
+
+
+<div class="container mt-4">
+
+    <h1>Créer une question</h1>
+
+    <div class="row mt-3">
+        <div class="col-md-5">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Text" class="control-label"></label>
+                    <input asp-for="Text" class="form-control" /> <span asp-validation-for="Text" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ModuleId" class="control-label"></label>
+                    <select class="form-control" id="moduleSelect" asp-for="ModuleId" asp-items="@Model.Modules"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="QuestionType" class="control-label"></label>
+                    <select class="form-control" id="questionTypeSelect" asp-for="QuestionType" asp-items="Html.GetEnumSelectList<TestGenerator.Model.Constants.QuestionTypeEnum>()"></select>
+                </div>
+                <!-- Section question Oui / Non -->
+                <div class="form-group answers" id="yesno">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <th>Réponses possibles</th>
+                                <th>Réponse correcte</th>
+                            </tr>
+                        </thead>
+                        <tbody id="binary">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Section question Oui / Non -->
+                <!-- Section question choix multiple -->
+                <div class="form-group answers" id="multichoice">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <th>Réponses possibles</th>
+                                <th>Réponse correcte</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mcq">
+                        </tbody>
+                    </table>
+                    <input id="add-multi-choice" type="button" class="btn btn-default" value="Ajouter un champ de réponse" />
+                </div>
+                <!-- Section question choix multiple -->
+                <!-- Section question choix unique -->
+                <div class="form-group answers" id="singlechoice">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <th>Réponses possibles</th>
+                                <th>Réponse correcte</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scq">
+                        </tbody>
+                    </table>
+                    <input id="add-single-choice" type="button" class="btn btn-default" value="Ajouter un champs réponse" />
+                </div>
+                <!-- Section question choix unique -->
+
+
+                <div class="form-group mt-4">
+                    <input class="btn btn-primary" type="submit" value="Créer une question"/>
+                    <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
