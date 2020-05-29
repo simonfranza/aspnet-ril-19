@@ -2,37 +2,42 @@
 
 @{ ViewData["Title"] = string.Format("{0} - Details", @Model.Title); }
 
-<h2>@Model.Title</h2>
-<p class="text-muted">@Model.Description</p>
+<div class="row justify-content-center mt-5">
+    <div class="col-10">
+        
+        <h2>@Model.Title</h2>
+        <p class="text-muted">@Model.Description</p>
 
-<div class="row">
-    <h4>@Html.DisplayNameFor(model => model.Exams)</h4>
-</div>
-<div class="row">
-    <ul>
-        @foreach (TestGenerator.Model.Entities.Exam exam in Model.Exams)
-        {
-            <li>
-                <a asp-controller="Exams" asp-action="Details" asp-route-id="@exam.ExamId">@exam.Name</a>
-            </li>
-        }
-    </ul>
-</div>
-
-<div class="row">
-    <h4>@Html.DisplayNameFor(model => model.Questions)</h4>
-</div>
-<div class="row">
-    <ul>
-        @foreach (TestGenerator.Model.Entities.Question question in Model.Questions)
-        {
-            <li>
-                <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Text</a>
-            </li>
-        }
-    </ul>
-</div>
-
-<div>
-    <a class="btn btn-primary" asp-action="Index">Retour à la liste</a>
+        <h4 class="mt-5">@Html.DisplayNameFor(model => model.Exams)</h4>
+        <ul>
+            @foreach (TestGenerator.Model.Entities.Exam exam in Model.Exams)
+            {
+                <li>
+                    <a asp-controller="Exams" asp-action="Details" asp-route-id="@exam.ExamId">@exam.Name</a>
+                </li>
+            }
+        </ul>
+    
+        <h4 class="mt-3">@Html.DisplayNameFor(model => model.Questions)</h4>
+        <ul>
+            @foreach (TestGenerator.Model.Entities.Question question in Model.Questions)
+            {
+                <li>
+                    <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Text</a>
+                </li>
+            }
+        </ul>
+        
+        <div class="mt-4">
+            @if (User.IsInRole("Administrator"))
+            {
+                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ModuleId">Modifier</a>
+                <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+            }
+            else
+            {
+                <a class="btn btn-primary" asp-action="Index">Retour à la liste</a>
+            }
+        </div>
+    </div>
 </div>
