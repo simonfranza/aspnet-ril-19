@@ -74,12 +74,12 @@ namespace TestGenerator.UnitTest
             var controller = new ExamsController (GetFakeContext());
 
             // Act
-            var positiveResult = controller.RetrieveQuestions(1);
+            var positiveResult = controller.RetrieveQuestions(1, 0);
 
             // Assert
             Assert.IsAssignableFrom<List<Question>>(positiveResult);
-            Assert.Throws<ArgumentException>(() => controller.RetrieveQuestions(0));
-            Assert.Throws<ArgumentException>(() => controller.RetrieveQuestions(-1));
+            Assert.Throws<ArgumentException>(() => controller.RetrieveQuestions(0, 0));
+            Assert.Throws<ArgumentException>(() => controller.RetrieveQuestions(-1, 0));
         }
 
         [Fact]

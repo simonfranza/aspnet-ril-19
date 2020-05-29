@@ -77,7 +77,7 @@ namespace TestGenerator.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var selectedQuestions = RetrieveQuestions(viewModel.QuestionAmount);
+            var selectedQuestions = RetrieveQuestions(viewModel.QuestionAmount, viewModel.ModuleId);
 
             var exam = new Exam
             {
@@ -121,7 +121,7 @@ namespace TestGenerator.Web.Controllers
             return View(exam);
         }
 
-        public virtual List<Question> RetrieveQuestions(int limit)
+        public virtual List<Question> RetrieveQuestions(int limit, int moduleId)
         {
             if (limit < 1)
             {
@@ -129,6 +129,7 @@ namespace TestGenerator.Web.Controllers
             }
 
             return _context.Questions
+                .Where(q => q.ModuleId.Equals(moduleId))
                 .OrderBy(r => Guid.NewGuid())
                 .Take(limit)
                 .ToList();
@@ -194,6 +195,14 @@ namespace TestGenerator.Web.Controllers
             }
 
             return View(exam);
+        }
+
+        [HttpGet]
+        public ActionResult GetModuleQuestionsAmount(int? moduleId)
+        {
+            return (moduleId != null)
+                ? Json(new { Success="true",Data = _context.Questions.Count(q => q.ModuleId.Equals(moduleId)) })
+                : Json(new { Success = "false" });
         }
     }
 }
