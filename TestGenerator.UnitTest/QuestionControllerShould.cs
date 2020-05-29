@@ -42,7 +42,9 @@ namespace TestGenerator.UnitTest
             var context = GetFakeContext();
 
             var questionDbSetMock = new Mock<DbSet<Question>>();
+            var answerDbSetMock = new Mock<DbSet<Answer>>();
             context.Questions = questionDbSetMock.Object;
+            context.Answers = answerDbSetMock.Object;
 
             var controller = new QuestionsController(context);
 
@@ -52,6 +54,7 @@ namespace TestGenerator.UnitTest
             // Assert
             Assert.IsAssignableFrom<RedirectToActionResult>(result);
             questionDbSetMock.Verify(x => x.AddAsync(It.IsNotNull<Question>(), default), Times.Once);
+            answerDbSetMock.Verify(x => x.AddRangeAsync(It.IsNotNull<List<Answer>>(), default), Times.Once);
         }
 
         [Fact]

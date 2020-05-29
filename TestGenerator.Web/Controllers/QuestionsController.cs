@@ -31,6 +31,11 @@ namespace TestGenerator.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(QuestionCreationViewModel questionViewModel)
         {
+            if (questionViewModel.Answers == null)
+            {
+                questionViewModel.Answers = questionViewModel.BinaryAnswers;
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -40,11 +45,21 @@ namespace TestGenerator.Web.Controllers
             {
                 ModuleId = questionViewModel.ModuleId,
                 QuestionType = questionViewModel.QuestionType,
-                Text = questionViewModel.Text,
-                Answers = questionViewModel.Answers
+                Text = questionViewModel.Text
             };
 
             await _context.Questions.AddAsync(question);
+
+            var answersList = questionViewModel.Answers
+                .Select(answerViewModel => new Answer()
+                {
+                    QuestionId = question.QuestionId,
+                    Text = answerViewModel.Text,
+                    IsValid = answerViewModel.IsValid
+                })
+                .ToList();
+
+            await _context.Answers.AddRangeAsync(answersList);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
@@ -55,10 +70,35 @@ namespace TestGenerator.Web.Controllers
         {
             var questionViewModel = new QuestionCreationViewModel();
             questionViewModel.Modules = _context.Modules
-                .Select(module => new SelectListItem {Text = module.Title, Value = "" + module.ModuleId})
+                .Select(module => new SelectListItem { Text = module.Title, Value = "" + module.ModuleId })
                 .ToList();
-            
+            questionViewModel.Answers = new List<AnswerCreationViewModel> { new AnswerCreationViewModel() };
+
             return View(questionViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult AddBinaryAnswer()
+        {
+            return View(new QuestionCreationViewModel());
+        }
+
+        [HttpGet]
+        public IActionResult AddMultiAnswer()
+        {
+            var viewModel = new QuestionCreationViewModel { Answers = new List<AnswerCreationViewModel>() };
+            viewModel.Answers.Add(new AnswerCreationViewModel());
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult AddSingleAnswer()
+        {
+            var viewModel = new QuestionCreationViewModel { Answers = new List<AnswerCreationViewModel>() };
+            viewModel.Answers.Add(new AnswerCreationViewModel());
+
+            return View(viewModel);
         }
     }
 }

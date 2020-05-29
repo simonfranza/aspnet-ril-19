@@ -21,12 +21,14 @@ namespace TestGenerator.Web.Models
         [Display(Name = "Type de question")]
         public QuestionTypeEnum QuestionType { get; set; }
 
+        public List<AnswerCreationViewModel> Answers { get; set; }
+
+        public List<AnswerCreationViewModel> BinaryAnswers { get; set; } = new List<AnswerCreationViewModel> { new AnswerCreationViewModel { Text = "Oui" }, new AnswerCreationViewModel { Text = "Non" } };
+
         [Required(ErrorMessage ="La question doit appartenir à un module.")]
         [Display(Name ="Module de cours")]
         public int ModuleId { get; set; }
 
         public List<SelectListItem> Modules { get; set; }
-
-        public ICollection<Answer> Answers { get; set; }
     }
 }
