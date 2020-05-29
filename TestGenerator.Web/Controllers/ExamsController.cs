@@ -22,7 +22,7 @@ namespace TestGenerator.Web.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string moduleId = "")
         {
             List<Exam> examList = null;
 
@@ -42,7 +42,16 @@ namespace TestGenerator.Web.Controllers
                     .ToList();
             }
 
-            return View(examList);
+            if (!String.IsNullOrEmpty(moduleId))
+            {
+                examList = examList.Where(e => e.ModuleId.ToString().Equals(moduleId)).ToList();
+            }
+
+            return View(new ExamIndexViewModel()
+            {
+                Exams = examList,
+                Modules = _context.Modules.ToList()
+            });
         }
 
         [HttpGet]
