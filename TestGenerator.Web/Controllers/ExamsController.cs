@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestGenerator.Model.Data;
 using TestGenerator.Model.Entities;
 using TestGenerator.Web.Models;
+using TestGenerator.Web.Models.ExamAttempt;
 
 namespace TestGenerator.Web.Controllers
 {
@@ -16,10 +18,12 @@ namespace TestGenerator.Web.Controllers
     public class ExamsController : Controller
     {
         private readonly TestGeneratorContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public ExamsController(TestGeneratorContext context)
+        public ExamsController(TestGeneratorContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -109,6 +113,120 @@ namespace TestGenerator.Web.Controllers
             }
 
             return View(exam);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Attempt(int? id)
+        {
+            if(id == null)
+            {
+                NotFound();
+            }
+
+            var viewModel = new ExamAttemptViewModel
+            {
+                Exam = await _context.Exams.Include(e => e.Questions).ThenInclude(q => q.Question).ThenInclude(q => q.Answers).FirstOrDefaultAsync(e => e.ExamId == id),
+                ExamId = (int)id,
+                User = await _userManager.FindByIdAsync(_userManager.GetUserId(User)),
+                UserId = _userManager.GetUserId(User),
+                ParticipationDate = DateTime.Now
+            };
+
+            var questions = new List<ExamQuestionViewModel>();
+            foreach(ExamQuestion question in viewModel.Exam.Questions)
+            {
+                var questionVM = new ExamQuestionViewModel
+                {
+                    QuestionId = question.Question.QuestionId,
+                    Text = question.Question.Text,
+                    QuestionType = question.Question.QuestionType
+                };
+
+                var answers = new List<ExamAnswerViewModel>();
+                foreach(Answer answer in question.Question.Answers)
+                {
+                    var answerVM = new ExamAnswerViewModel
+                    {
+                        Text = answer.Text,
+                        AnswerId = answer.AnswerId
+                    };
+                    answers.Add(answerVM);
+                }
+
+                questionVM.Answers = answers;
+
+                questions.Add(questionVM);
+            }
+
+            viewModel.Questions = questions;
+
+            if(viewModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Attempt(ExamAttemptViewModel viewModel)
+        {
+            if(viewModel == null)
+            {
+                return BadRequest();
+            }
+
+            viewModel.Exam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamId == viewModel.ExamId);
+
+            if(viewModel.ParticipationDate.AddMinutes(viewModel.Exam.Duration) > DateTime.Now)
+            {
+                return BadRequest();
+            }
+
+            var examAttempt = new ExamAttempt
+            {
+                ExamId = viewModel.ExamId,
+                UserId = viewModel.UserId,
+                ParticipationDate = viewModel.ParticipationDate
+            };
+
+            await _context.ExamAttempts.AddAsync(examAttempt);
+            await _context.SaveChangesAsync();
+
+            foreach(ExamQuestionViewModel question in viewModel.Questions)
+            {
+                foreach(ExamAnswerViewModel answer in question.Answers)
+                {
+                    if (answer.StudentAnswer)
+                    {
+                        var userAnswer = new UserAnswer 
+                        { 
+                            QuestionId = question.QuestionId, 
+                            ExamAttemptId = examAttempt.ExamAttemptId,
+                            AnswerId = answer.AnswerId
+                        };
+                        var realAnswer = await _context.Answers.FirstOrDefaultAsync(a => a.AnswerId == answer.AnswerId);
+                        userAnswer.IsValid = realAnswer.IsValid;
+                        await _context.UserAnswers.AddAsync(userAnswer);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+
+            var userAnswers = _context.UserAnswers
+                .Where(userAnswer => userAnswer.ExamAttemptId.Equals(examAttempt.ExamAttemptId))
+                .ToList();
+
+            examAttempt.Result = (userAnswers.Select(userAnswer => userAnswer.IsValid).Count() / userAnswers.Count()) * 100;
+
+            var examAttemptData = _context.ExamAttempts.Update(examAttempt);
+
+            if(examAttemptData == null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction("Index");
         }
 
         public virtual List<Question> RetrieveQuestions(int limit)

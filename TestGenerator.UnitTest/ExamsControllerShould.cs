@@ -21,6 +21,12 @@ namespace TestGenerator.UnitTest
 {
     public class ExamsControllerShould
     {
+        public Mock<UserManager<User>> GetUserManagerMock()
+        {
+            var userStoreMock = Mock.Of<IUserStore<User>>();
+            return new Mock<UserManager<User>>(userStoreMock, null, null, null, null, null, null, null, null);
+        }
+
         public TestGeneratorContext GetFakeContext()
         {
             var options = new DbContextOptionsBuilder<TestGeneratorContext>()
@@ -36,7 +42,7 @@ namespace TestGenerator.UnitTest
         public async Task Return_Bad_Request_Result_When_ModelState_Is_Invalid_On_Create_Post()
         {
             // Arrange
-            var controller = new ExamsController(GetFakeContext());
+            var controller = new ExamsController(GetFakeContext(), GetUserManagerMock().Object);
             controller.ModelState.AddModelError("Name", "Required");
             var viewModel = new ExamCreationViewModel();
 
@@ -55,7 +61,7 @@ namespace TestGenerator.UnitTest
             var context = GetFakeContext();
             context.Questions.RemoveRange(context.Questions.ToList());
 
-            var controller = new ExamsController(context);
+            var controller = new ExamsController(context, GetUserManagerMock().Object);
             var viewModel = new ExamCreationViewModel();
             viewModel.QuestionAmount = int.MaxValue;
 
@@ -71,7 +77,7 @@ namespace TestGenerator.UnitTest
         public void Throw_ArgumentException_When_Calling_Retrieve_Questions_With_Non_Positive_Limit_Argument()
         {
             // Arrange
-            var controller = new ExamsController (GetFakeContext());
+            var controller = new ExamsController (GetFakeContext(), GetUserManagerMock().Object);
 
             // Act
             var positiveResult = controller.RetrieveQuestions(1);
@@ -91,7 +97,7 @@ namespace TestGenerator.UnitTest
                 .ForEach(b => fixture.Behaviors.Remove(b));
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-            var controller = new ExamsController (GetFakeContext());
+            var controller = new ExamsController (GetFakeContext(), GetUserManagerMock().Object);
             var questionList = fixture.CreateMany<Question>(7).ToList();
 
             // Act
@@ -121,7 +127,7 @@ namespace TestGenerator.UnitTest
             context.ExamQuestions = examQuestionDbSetMock.Object;
             context.SaveChanges();
 
-            var controller = new ExamsController (context);
+            var controller = new ExamsController (context, GetUserManagerMock().Object);
             var viewModel = fixture.Create<ExamCreationViewModel>();
             viewModel.QuestionAmount = 3;
 
@@ -141,7 +147,7 @@ namespace TestGenerator.UnitTest
         public async Task Return_Not_Found_On_Details_With_No_Id()
         {
             // Arrange
-            var controller = new ExamsController(GetFakeContext());
+            var controller = new ExamsController(GetFakeContext(), GetUserManagerMock().Object);
 
             // Act
             var result = await controller.Details(null);
@@ -154,7 +160,7 @@ namespace TestGenerator.UnitTest
         public async Task Return_Not_Found_On_Details_When_Id_Doesnt_Match_Any_Existing_Object()
         {
             // Arrange
-            var controller = new ExamsController(GetFakeContext());
+            var controller = new ExamsController(GetFakeContext(), GetUserManagerMock().Object);
 
             // Act
             var result = await controller.Details(4);
@@ -178,7 +184,7 @@ namespace TestGenerator.UnitTest
             context.Exams.Add(exam);
             context.SaveChanges();
 
-            var controller = new ExamsController(context);
+            var controller = new ExamsController(context, GetUserManagerMock().Object);
 
             // Act
             var result = await controller.Details(exam.ExamId);
