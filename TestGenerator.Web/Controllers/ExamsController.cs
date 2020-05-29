@@ -135,5 +135,55 @@ namespace TestGenerator.Web.Controllers
 
             return examQuestions;
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Delete(Exam examData)
+        {
+            if (examData == null)
+            {
+                return NotFound();
+            }
+
+            var exam = await _context.Exams
+                .Include(e => e.Questions)
+                .ThenInclude(e => e.Question)
+                .Include(e => e.Module)
+                .FirstOrDefaultAsync(e => e.ExamId == examData.ExamId);
+
+            if (exam == null)
+            {
+                return NotFound();
+            }
+
+            _context.Exams.Remove(exam);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Exams");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var exam = await _context.Exams
+                .Include(e => e.Questions)
+                .ThenInclude(e => e.Question)
+                .Include(e => e.Module)
+                .FirstOrDefaultAsync(e => e.ExamId == id);
+
+            if (exam == null)
+            {
+                return NotFound();
+            }
+
+            return View(exam);
+        }
     }
 }
