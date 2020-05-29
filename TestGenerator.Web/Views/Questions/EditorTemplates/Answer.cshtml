@@ -1,0 +1,10 @@
+﻿@model TestGenerator.Model.Entities.Answer
+
+<td>
+    @Html.TextBoxFor(x => x.Text, new { @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.Text)
+</td>
+<td>
+    @Html.CheckBoxFor(x => x.IsValid, new { @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.IsValid)
+</td>

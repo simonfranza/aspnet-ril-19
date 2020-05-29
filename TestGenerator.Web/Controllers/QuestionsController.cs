@@ -34,8 +34,7 @@ namespace TestGenerator.Web.Controllers
             var question = new Question
             {
                 QuestionType = questionViewModel.QuestionType,
-                Text = questionViewModel.Text,
-                Answers = questionViewModel.Answers
+                Text = questionViewModel.Text
             };
 
             await _context.Questions.AddAsync(question);
@@ -47,7 +46,16 @@ namespace TestGenerator.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new QuestionCreationViewModel { Answers = new List<Answer> { new Answer() } });
+        }
+
+        [HttpGet]
+        public IActionResult AddAnswer()
+        {
+            var viewModel = new QuestionCreationViewModel { Answers = new List<Answer>() };
+            viewModel.Answers.Add(new Answer());
+
+            return View(viewModel);
         }
     }
 }

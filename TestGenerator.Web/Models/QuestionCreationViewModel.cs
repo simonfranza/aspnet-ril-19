@@ -20,6 +20,6 @@ namespace TestGenerator.Web.Models
         [Display(Name = "Type de question")]
         public QuestionTypeEnum QuestionType { get; set; }
 
-        public ICollection<Answer> Answers { get; set; }
+        public List<Answer> Answers { get; set; }
     }
 }

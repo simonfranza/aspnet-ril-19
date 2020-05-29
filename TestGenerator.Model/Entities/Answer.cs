@@ -17,5 +17,7 @@ namespace TestGenerator.Model.Entities
         [Required]
         [Column("QuestionId")]
         public int QuestionId { get; set; }
+
+        public string Index { get; set; }
     }
 }
