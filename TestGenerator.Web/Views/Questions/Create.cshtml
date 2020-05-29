@@ -52,7 +52,6 @@
                         </tr>
                     </thead>
                     <tbody id="mcq">
-                        @Html.EditorForMany(x => x.Answers, x => x.Index, true, "MultiAnswer")
                     </tbody>
                 </table>
                 <input id="add-multi-choice" type="button" class="btn btn-default" value="Ajouter un champ de réponse" />
@@ -68,8 +67,6 @@
                         </tr>
                     </thead>
                     <tbody id="scq">
-                        <!--TODO CHANGE TO RADIO-->
-                        @Html.EditorForMany(x => x.Answers, x => x.Index, true, "SingleAnswer")
                     </tbody>
                 </table>
                 <input id="add-single-choice" type="button" class="btn btn-default" value="Ajouter un champs réponse" />

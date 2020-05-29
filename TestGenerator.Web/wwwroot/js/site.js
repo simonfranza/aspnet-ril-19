@@ -14,8 +14,16 @@ $(function () {
             case '0': $('#yesno').show();
                 break;
             case '1': $('#singlechoice').show();
+                jQuery.get('/Questions/AddSingleAnswer').done(function (html) {
+                    $('#scq').append(html);
+                });
+                $('#mcq').empty();
                 break;
             case '2': $('#multichoice').show();
+                jQuery.get('/Questions/AddMultiAnswer').done(function (html) {
+                    $('#mcq').append(html);
+                });
+                $('#scq').empty();
                 break;
         }
     });
@@ -30,5 +38,10 @@ $(function () {
         jQuery.get('/Questions/AddMultiAnswer').done(function (html) {
             $('#mcq').append(html);
         });
+    });
+
+    $(document).on('click', '.rdb', function () {
+        $('.rdb').prop('checked', false);
+        $(this).prop('checked', true);
     });
 });

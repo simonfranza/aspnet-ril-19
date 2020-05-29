@@ -57,5 +57,14 @@ namespace TestGenerator.Web.Controllers
 
             return View(viewModel);
         }
+
+        [HttpGet]
+        public IActionResult AddSingleAnswer()
+        {
+            var viewModel = new QuestionCreationViewModel { Answers = new List<Answer>() };
+            viewModel.Answers.Add(new Answer());
+
+            return View(viewModel);
+        }
     }
 }
