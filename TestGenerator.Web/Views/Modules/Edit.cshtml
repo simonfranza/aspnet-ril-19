@@ -1,19 +1,22 @@
-﻿@model ModuleCreationViewModel
+﻿@model TestGenerator.Model.Entities.Module
 
 @{
-    ViewData["Title"] = "Créer un module d'évaluation";
+    ViewData["Title"] = $"Edition - {Model.Title}";
 }
 
 <div class="container mt-4">
-    <h1>Ajouter un module d'évaluation</h1>
+
+    <h1>@Model.Title</h1>
+    <p class="text-muted">Edition</p>
 
     <div class="row mt-3">
         <div class="col-md-4">
-            <form asp-action="Create">
+            <form asp-action="Edit">
+                <input type="hidden" asp-for="ModuleId" />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Title"></label>
-                    <input class="form-control" asp-for="Title"/>
+                    <input class="form-control" asp-for="Title" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -21,8 +24,9 @@
                     <textarea class="form-control" asp-for="Description"></textarea>
                 </div>
                 <div class="form-group mt-4">
-                    <input type="submit" value="Créer un module" class="btn btn-primary"/>
+                    <input class="btn btn-primary" type="submit" value="Enregistrer" />
                     <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+
                 </div>
             </form>
         </div>

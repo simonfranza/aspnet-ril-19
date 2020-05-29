@@ -1,21 +1,29 @@
-﻿@model TestGenerator.Model.Entities.Question
+﻿@using TestGenerator.Model.Entities
+@model Question
 
 @{
-    ViewData["Title"] = "Supprimer une question";
+    ViewData["Title"] = $"{Model.Text} - Suppression"; ;
 }
+<div class="row mt-5 justify-content-center">
+    <div class="col-10">
+        <h2>Voulez-vous vraiment supprimer la question "@Model.Text" ?</h2>
+        <hr />
+        <h3>Cette question est utilisées dans les éléments suivants: </h3>
 
-<h2>Supprimer une question</h2>
+        <h4 class="mt-5">Examens</h4>
+        <ul>
+            @foreach (var exam in @Model.Exams)
+            {
+                <li><a asp-controller="Exams" asp-action="Details" asp-route-id="@exam.ExamId">@exam.Exam.Name</a></li>
+            }
+        </ul>
 
-<h3>Êtes-vous sûr de vouloir supprimer cette question?</h3>
-<div>
-    <h4>Question</h4>
-    <hr />
-    <dl class="dl-horizontal">
-    </dl>
+        <hr class="mt-5" />
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="QuestionId" />
-        <input type="submit" value="Supprimer" class="btn btn-default" /> |
-        <a asp-action="Index">Retour à la liste</a>
-    </form>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="ModuleId" />
+            <input class="btn btn-danger" type="submit" value="Supprimer la question" />
+            <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+        </form>
+    </div>
 </div>

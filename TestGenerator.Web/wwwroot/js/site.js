@@ -54,4 +54,23 @@ $(function () {
         $('.rdb').prop('checked', false);
         $(this).prop('checked', true);
     });
+
+
+    // Ajax call used to set the QuestionAmount field's max value in exam creation page.
+    $("#examCreationModuleSelect").change(function () {
+        var selectedModuleId = $(this).val();
+
+        if (selectedModuleId !== "") {
+            jQuery.get("/Exams/GetModuleQuestionsAmount?moduleId=" + selectedModuleId).done((res) => {
+                // Sets the input's max data and value
+                if (res.data > 0) {
+                    $("#QuestionAmount").prop('readonly', false).prop("max", res.data).val(1);
+                    $("#module-question-amount-insufficient-error").prop("hidden", true);
+                } else {
+                    $("#QuestionAmount").prop('readonly', true).val(0);
+                    $("#module-question-amount-insufficient-error").prop("hidden", false);
+                }
+            });
+        }
+    });
 });

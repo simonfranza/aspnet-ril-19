@@ -9,27 +9,21 @@
     ViewData["Title"] = "Modules";
 }
 
-<h2>Modules</h2>
-
-<div class="container">
-
-    @if (SignInManager.IsSignedIn(User))
+<div class="container mt-4">
+    <h2>Modules</h2>
+    
+    @if (User.IsInRole("Administrator"))
     {
-        if (User.IsInRole("Administrator"))
-        {
-            <p>
-                <a class="btn btn-primary" asp-action="Create">Créer un Module</a>
-            </p>
-        }
-
-        <div class="row row-cols-3 row-cols-md-2">
-
-            @foreach (var module in Model)
-            {
-                <div class="col-4 mt-3 mb-3">
-                    <partial Name="_ModuleCardPartial" model="@module"/>
-                </div>
-            }
-        </div>
+        <a class="btn btn-primary" asp-action="Create">Créer un Module</a>
     }
+
+    <div class="row row-cols-3 row-cols-md-2 mt-3">
+
+        @foreach (var module in Model)
+        {
+            <div class="col-4 mt-3 mb-3">
+                <partial Name="_ModuleCardPartial" model="@module"/>
+            </div>
+        }
+    </div>
 </div>

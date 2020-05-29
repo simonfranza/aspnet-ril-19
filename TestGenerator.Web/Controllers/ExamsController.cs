@@ -26,7 +26,7 @@ namespace TestGenerator.Web.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string moduleId = "")
         {
             List<Exam> examList = null;
 
@@ -42,10 +42,20 @@ namespace TestGenerator.Web.Controllers
             {
                 examList = _context.Exams
                     .Where(e => e.ClosingDate > DateTime.Now)
+                    .Include(e => e.Module)
                     .ToList();
             }
 
-            return View(examList);
+            if (!String.IsNullOrEmpty(moduleId))
+            {
+                examList = examList.Where(e => e.ModuleId.ToString().Equals(moduleId)).ToList();
+            }
+
+            return View(new ExamIndexViewModel()
+            {
+                Exams = examList,
+                Modules = _context.Modules.ToList()
+            });
         }
 
         [HttpGet]
@@ -71,7 +81,7 @@ namespace TestGenerator.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var selectedQuestions = RetrieveQuestions(viewModel.QuestionAmount);
+            var selectedQuestions = RetrieveQuestions(viewModel.QuestionAmount, viewModel.ModuleId);
 
             var exam = new Exam
             {
@@ -229,7 +239,7 @@ namespace TestGenerator.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public virtual List<Question> RetrieveQuestions(int limit)
+        public virtual List<Question> RetrieveQuestions(int limit, int moduleId)
         {
             if (limit < 1)
             {
@@ -237,6 +247,7 @@ namespace TestGenerator.Web.Controllers
             }
 
             return _context.Questions
+                .Where(q => q.ModuleId.Equals(moduleId))
                 .OrderBy(r => Guid.NewGuid())
                 .Take(limit)
                 .ToList();
@@ -252,6 +263,64 @@ namespace TestGenerator.Web.Controllers
             }
 
             return examQuestions;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Delete(Exam examData)
+        {
+            if (examData == null)
+            {
+                return NotFound();
+            }
+
+            var exam = await _context.Exams
+                .Include(e => e.Questions)
+                .ThenInclude(e => e.Question)
+                .Include(e => e.Module)
+                .FirstOrDefaultAsync(e => e.ExamId == examData.ExamId);
+
+            if (exam == null)
+            {
+                return NotFound();
+            }
+
+            _context.Exams.Remove(exam);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Exams");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var exam = await _context.Exams
+                .Include(e => e.Questions)
+                .ThenInclude(e => e.Question)
+                .Include(e => e.Module)
+                .FirstOrDefaultAsync(e => e.ExamId == id);
+
+            if (exam == null)
+            {
+                return NotFound();
+            }
+
+            return View(exam);
+        }
+
+        [HttpGet]
+        public ActionResult GetModuleQuestionsAmount(int? moduleId)
+        {
+            return (moduleId != null)
+                ? Json(new { Success="true",Data = _context.Questions.Count(q => q.ModuleId.Equals(moduleId)) })
+                : Json(new { Success = "false" });
         }
     }
 }

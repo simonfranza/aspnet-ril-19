@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TestGenerator.Model.Entities;
+using TestGenerator.Model.Helpers;
 
 namespace TestGenerator.Web.Models
 {
@@ -34,6 +35,7 @@ namespace TestGenerator.Web.Models
         [Required]
         [Display(Name = "Date de cloturation")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [ExamDateValidator]
         public DateTime ClosingDate { get; set; }
 
         public ICollection<ExamQuestion> ExamQuestions { get; set; }
