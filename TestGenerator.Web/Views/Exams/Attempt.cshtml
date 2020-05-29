@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        <form asp-action="Attempt">
+        <form asp-action="Attempt" class="mt-5">
             @Html.HiddenFor(m => m.ExamId)
             @Html.HiddenFor(m => m.UserId)
 
@@ -12,21 +12,23 @@
                     @Html.HiddenFor(m => m.Questions[i].QuestionId)
                     @using TestGenerator.Model.Constants
 
-                    @Html.TextBoxFor(m => m.Questions[i].Text)
+                    @Html.TextBoxFor(m => m.Questions[i].Text, new { @class = "form-control", @readonly = true, @style = "font-size: 1.7em; margin: 0; background: none; border: none;"})
                     @for (int j = 0; j < @Model.Questions[i].Answers.Count; j++)
                     {
+                    <div class="form-row mt-3">
                         @Html.HiddenFor(m => m.Questions[i].Answers[j].AnswerId)
-                        @Html.TextBoxFor(m => m.Questions[i].Answers[j].Text)
+                        @Html.TextBoxFor(m => m.Questions[i].Answers[j].Text, new { @class = "col-8 form-control", @readonly = true })
                         @switch (Model.Questions[i].QuestionType)
                         {
                             case QuestionTypeEnum.YesNo:
                             case QuestionTypeEnum.SingleChoice:
-                                @Html.CheckBoxFor(m => m.Questions[i].Answers[j].StudentAnswer)
+                                @Html.CheckBoxFor(m => m.Questions[i].Answers[j].StudentAnswer, new { @class = "col-4 form-control rdb" })
                                 break;
                             case QuestionTypeEnum.MultipleChoice:
-                                @Html.CheckBoxFor(m => m.Questions[i].Answers[j].StudentAnswer)
+                                @Html.CheckBoxFor(m => m.Questions[i].Answers[j].StudentAnswer, new { @class = "col-4 form-control" })
                                 break;
                         }
+                    </div>
                     }
                 </div>
             }
