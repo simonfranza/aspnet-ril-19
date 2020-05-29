@@ -62,6 +62,8 @@ namespace TestGenerator.Web.Controllers
             }
 
             var module = await _context.Modules
+                .Include(m => m.Exams)
+                .Include(m => m.Questions)
                 .FirstOrDefaultAsync(m => m.ModuleId == id);
             if (module == null)
             {

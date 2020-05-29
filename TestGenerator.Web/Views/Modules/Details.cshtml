@@ -1,62 +1,38 @@
 ﻿@model TestGenerator.Model.Entities.Module
 
-@{
-    ViewData["Title"] = "Details";
-}
+@{ ViewData["Title"] = string.Format("{0} - Details", @Model.Title); }
 
-<h2>Details</h2>
+<h2>@Model.Title</h2>
+<p class="text-muted">@Model.Description</p>
 
-<div>
-    <h4>Module</h4>
-    <hr />
-    <div class="row">
-        <dl class="dl-horizontal col-md-4">
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-        </dl>
-        <dl class="dl-horizontal col-md-8">
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-        </dl>
-    </div>
-    <div class="row">
-        <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.Exams)
-            </dt>
-            <dd>
-                <ul>
-                    @foreach (TestGenerator.Model.Entities.Exam exam in Model.Exams)
-                    {
-                    <li>@exam.Name</li>
-                    }
-                </ul>
-            </dd>
-        </dl>
-        <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.Questions)
-            </dt>
-            <dd>
-                <ul>
-                    @foreach (TestGenerator.Model.Entities.Question question in Model.Questions)
-                    {
-                        <li>@question.Text</li>
-                    }
-                </ul>
-            </dd>
-        </dl>
-    </div>
+<div class="row">
+    <h4>@Html.DisplayNameFor(model => model.Exams)</h4>
 </div>
+<div class="row">
+    <ul>
+        @foreach (TestGenerator.Model.Entities.Exam exam in Model.Exams)
+        {
+            <li>
+                <a asp-controller="Exams" asp-action="Details" asp-route-id="@exam.ExamId">@exam.Name</a>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="row">
+    <h4>@Html.DisplayNameFor(model => model.Questions)</h4>
+</div>
+<div class="row">
+    <ul>
+        @foreach (TestGenerator.Model.Entities.Question question in Model.Questions)
+        {
+            <li>
+                <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Text</a>
+            </li>
+        }
+    </ul>
+</div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ModuleId">Modifier</a> |
-    <a asp-action="Index">Retour à la liste</a>
+    <a class="btn btn-primary" asp-action="Index">Retour à la liste</a>
 </div>

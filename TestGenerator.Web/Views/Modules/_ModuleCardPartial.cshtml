@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TestGenerator.Model.Entities
+
+@model Module
+
+@inject SignInManager<User> SignInManager
+
+
+<div class="card h-100">
+    <div class="card-header h-100">
+        <h5 class="card-title">@Model.Title</h5>
+    </div>
+    <div class="card-body h-100">
+        <p class="card-text">@Model.Description</p>
+
+        @if (User.IsInRole("Administrator"))
+        {
+            <a class="btn btn-primary" asp-action="Details" asp-route-id="@Model.ModuleId">Details</a>
+        }
+
+    </div>
+    <div class="card-footer text-muted  h-100">
+        <p>
+            @Model.Exams.Count examens
+        </p>
+    </div>
+</div>

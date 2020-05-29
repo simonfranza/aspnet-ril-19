@@ -3,25 +3,32 @@
 
 @inject SignInManager<User> SignInManager
 
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
-        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TestGenerator.Web</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-            <ul class="navbar-nav flex-grow-1">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Accueil</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse row" id="navbarNav">
+        <ul class="navbar-nav col">
+            @if (SignInManager.IsSignedIn(User))
+            {
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="nav-link" asp-controller="Exams" asp-action="Index">Examens</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Modules" asp-action="Index">Modules</a>
                 </li>
 
-                @if (SignInManager.IsSignedIn(User))
+                @if (User.IsInRole("Administrator"))
                 {
-                    <li><a asp-controller="Exams" asp-action="Index">Examens</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Questions" asp-action="Index">Questions</a>
+                    </li>
                 }
-            </ul>
+            }
+        </ul>
+        <ul class="navbar-nav justify-content-end col">
             <partial name="_LoginPartial" />
-        </div>
+        </ul>
     </div>
 </nav>
