@@ -11,6 +11,8 @@ namespace TestGenerator.Web.Models
 {
     public class QuestionCreationViewModel
     {
+        public int QuestionId { get; set; }
+
         [Required(ErrorMessage="La question doit avoir un texte.")]
         [MaxLength(255)]
         [DataType(DataType.Text)]

@@ -13,6 +13,7 @@ namespace TestGenerator.Model.Entities
         [Required]
         [DataType(DataType.Text)]
         [MaxLength(255)]
+        [Display(Name = "Titre")]
         public string Name { get; set; }
 
         [DataType(DataType.Text)]
@@ -20,13 +21,16 @@ namespace TestGenerator.Model.Entities
 
         [Required]
         [Range(1, int.MaxValue)]
+        [Display(Name = "Nombre de questions")]
         public int QuestionAmount { get; set; }
 
         [Required]
         [Range(1, int.MaxValue)]
+        [Display(Name = "Nombre de tentatives")]
         public int AuthorizedAttempts { get; set; }
 
         [Required]
+        [Display(Name = "Durée de l'examen")]
         public int Duration { get; set; }
 
         [Required]

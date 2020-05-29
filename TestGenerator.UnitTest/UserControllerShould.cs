@@ -98,7 +98,7 @@ namespace TestGenerator.UnitTest
             var result = await controller.Register(fixture.Create<UserRegistrationViewModel>());
 
             // Assert
-            Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<RedirectToActionResult>(result);
             userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
         }
 
@@ -135,7 +135,7 @@ namespace TestGenerator.UnitTest
             var result = await controller.Register(userViewModel);
 
             // Assert
-            Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<RedirectToActionResult>(result);
             Assert.Contains("@cesi.fr", userViewModel.Email);
             userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
             userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Admin"), Times.Once);
@@ -169,7 +169,7 @@ namespace TestGenerator.UnitTest
             var result = await controller.Register(userViewModel);
 
             // Assert
-            Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<RedirectToActionResult>(result);
             Assert.Contains("@viacesi.fr", userViewModel.Email);
             userMgrMock.Verify(mgr => mgr.CreateAsync(It.IsNotNull<User>(), It.IsAny<string>()), Times.Once);
             userMgrMock.Verify(mgr => mgr.AddToRoleAsync(It.IsAny<User>(), "Admin"), Times.Never);

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ using TestGenerator.Web.Models;
 
 namespace TestGenerator.Web.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class QuestionsController : Controller
     {
         private readonly TestGeneratorContext _context;
@@ -19,16 +22,19 @@ namespace TestGenerator.Web.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             var questionList = _context.Questions
                 .Include(e => e.Module)
+                .Include(e => e.Exams)
                 .ToList();
 
             return View(questionList);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(QuestionCreationViewModel questionViewModel)
         {
             if (questionViewModel.Answers == null)
@@ -75,6 +81,81 @@ namespace TestGenerator.Web.Controllers
             questionViewModel.Answers = new List<AnswerCreationViewModel> { new AnswerCreationViewModel() };
 
             return View(questionViewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var question = await _context.Questions
+                .Include(q => q.Module)
+                .Include(q => q.Answers)
+                .FirstOrDefaultAsync(q => q.QuestionId == id);
+
+            if(question == null)
+            {
+                return NotFound();
+            }
+
+            return View(question);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Question questionData)
+        {
+            if (questionData == null)
+            {
+                return NotFound();
+            }
+
+            var question = await _context.Questions
+                .Include(q => q.Answers)
+                .Include(q => q.Module)
+                .Include(q => q.Exams)
+                .FirstOrDefaultAsync(q => q.QuestionId == questionData.QuestionId);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            if(question.Exams.Count != 0)
+            {
+                return Conflict();
+            }
+
+            _context.Questions.Remove(question);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Questions");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var question = await _context.Questions
+                .Include(q => q.Answers)
+                .Include(q => q.Exams)
+                .ThenInclude(q => q.Exam)
+                .Include(q => q.Module)
+                .FirstOrDefaultAsync(q => q.QuestionId == id);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            return View(question);
         }
 
         [HttpGet]

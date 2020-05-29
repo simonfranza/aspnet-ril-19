@@ -1,34 +1,22 @@
-﻿@model IEnumerable<TestGenerator.Model.Entities.Question>
+﻿@using TestGenerator.Model.Entities
+@model IEnumerable<Question>
 
-@{
-    ViewData["Title"] = "Questions";
-}
+@{ ViewData["Title"] = "Questions"; }
 
-<h2>Index</h2>
+<div class="container mt-4">
+    <h2>Questions</h2>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Créer une question</a>
-</p>
+    @if (User.IsInRole("Administrator"))
+    {
+<a class="btn btn-primary" asp-action="Create">Créer une question</a>}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Question</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @item.Text
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.QuestionId">Modifier</a> |
-                <a asp-action="Details" asp-route-id="@item.QuestionId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.QuestionId">Supprimer</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="row row-cols-3 row-cols-md-2 mt-3">
+
+        @foreach (var module in Model)
+        {
+            <div class="col-4 mt-3 mb-3">
+                <partial Name="_QuestionCardPartial" model="@module" />
+            </div>
+        }
+    </div>
+</div>

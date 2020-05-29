@@ -15,10 +15,11 @@
         <h6 class="card-subtitle mb-2 text-muted">@Model.QuestionAmount questions</h6>
         <p class="card-text">@Model.Description</p>
         <p class="card-text">@Model.AuthorizedAttempts essais autorisés</p>
-        
+
         @if (User.IsInRole("Administrator"))
         {
             <a class="btn btn-primary" asp-action="Details" asp-route-id="@Model.ExamId">Details</a>
+            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.ExamId">Supprimer</a>
         }
 
     </div>

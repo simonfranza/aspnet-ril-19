@@ -6,26 +6,28 @@
     ViewData["Title"] = string.Format("{0} - Details", @Model.Name);
 }
 
+<div class="row justify-content-center mt-5">
+    <div class="col-10">
+        
+        <h2>@Model.Name</h2>
+        <a class="badge badge-primary" asp-controller="Modules" asp-action="Details" asp-route-id="@Model.Module.ModuleId">@Model.Module.Title</a>
+        <p class="text-muted">@Model.Description</p>
 
-<h2>@Model.Name</h2>
-<a class="badge badge-primary" asp-controller="Modules" asp-action="Details" asp-route-id="@Model.Module.ModuleId">@Model.Module.Title</a>
-<p class="text-muted">@Model.Description</p>
-
-
-<div class="row">
-    <h4>@Html.DisplayNameFor(model => model.Questions)</h4>
-</div>
-<div class="row">
-    <ul>
-        @foreach (ExamQuestion question in Model.Questions)
+        @if (User.IsInRole("Administrator"))
         {
-            <li>
-                <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Question.Text</a>
-            </li>
+            <h4 class="mt-3">@Html.DisplayNameFor(model => model.Questions)</h4>
+            <ul>
+                @foreach (ExamQuestion question in Model.Questions)
+                {
+                    <li>
+                        <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Question.Text</a>
+                    </li>
+                }
+            </ul>
         }
-    </ul>
-</div>
-
-<div>
-    <a class="btn btn-primary" asp-action="Index">Retour à la liste</a>
+        
+        <div class="mt-4">
+            <a class="btn btn-primary" asp-action="Index">Retour à la liste</a>
+        </div>
+    </div>
 </div>

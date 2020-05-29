@@ -1,0 +1,22 @@
+﻿@using TestGenerator.Model.Entities
+
+@model Question
+
+
+<div class="card h-100">
+    <div class="card-header h-100">
+        <h5 class="card-title">@Model.Text</h5>
+        <a class="badge badge-primary" asp-controller="Modules" asp-action="Details" asp-route-id="@Model.Module.ModuleId">@Model.Module.Title</a>
+    </div>
+    <div class="card-body h-100">
+        <p class="card-text">Présente dans @Model.Exams.Count examens</p>
+
+        <a class="btn btn-primary" asp-action="Details" asp-route-id="@Model.QuestionId">Details</a>
+        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.QuestionId">Supprimer</a>
+    </div>
+    <div class="card-footer text-muted  h-100">
+        <p>
+            @Html.DisplayFor(model => model.QuestionType)
+        </p>
+    </div>
+</div>
