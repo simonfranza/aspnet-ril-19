@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using TestGenerator.Model.Entities;
 
 namespace TestGenerator.Model.Helpers
 {
@@ -10,12 +11,10 @@ namespace TestGenerator.Model.Helpers
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             DateTime dt = (DateTime)value;
-            if (dt >= DateTime.UtcNow)
-            {
-                return ValidationResult.Success;
-            }
 
-            return new ValidationResult(ErrorMessage ?? "La date de clôture doit être supérieure à la date du jour.");
+            return dt >= DateTime.UtcNow
+                ? ValidationResult.Success
+                : new ValidationResult(ErrorMessage ?? "La date de clôture doit être supérieure à la date du jour.");
         }
 
     }
