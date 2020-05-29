@@ -20,8 +20,8 @@ namespace TestGenerator.Web.Models
         [Display(Name = "Type de question")]
         public QuestionTypeEnum QuestionType { get; set; }
 
-        public List<Answer> Answers { get; set; }
+        public List<AnswerCreationViewModel> Answers { get; set; }
 
-        public List<Answer> BinaryAnswers { get; set; } = new List<Answer> { new Answer { Text = "Oui" }, new Answer { Text = "Non" } };
+        public List<AnswerCreationViewModel> BinaryAnswers { get; set; } = new List<AnswerCreationViewModel> { new AnswerCreationViewModel { Text = "Oui" }, new AnswerCreationViewModel { Text = "Non" } };
     }
 }

@@ -26,6 +26,11 @@ namespace TestGenerator.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(QuestionCreationViewModel questionViewModel)
         {
+            if (questionViewModel.Answers == null)
+            {
+                questionViewModel.Answers = questionViewModel.BinaryAnswers;
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -38,6 +43,17 @@ namespace TestGenerator.Web.Controllers
             };
 
             await _context.Questions.AddAsync(question);
+
+            var answersList = questionViewModel.Answers
+                .Select(answerViewModel => new Answer()
+                {
+                    QuestionId = question.QuestionId,
+                    Text = answerViewModel.Text,
+                    IsValid = answerViewModel.IsValid
+                })
+                .ToList();
+
+            await _context.Answers.AddRangeAsync(answersList);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
@@ -46,7 +62,7 @@ namespace TestGenerator.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View(new QuestionCreationViewModel { Answers = new List<Answer> { new Answer() } });
+            return View(new QuestionCreationViewModel { Answers = new List<AnswerCreationViewModel> { new AnswerCreationViewModel() } });
         }
 
         [HttpGet]
@@ -58,8 +74,8 @@ namespace TestGenerator.Web.Controllers
         [HttpGet]
         public IActionResult AddMultiAnswer()
         {
-            var viewModel = new QuestionCreationViewModel { Answers = new List<Answer>() };
-            viewModel.Answers.Add(new Answer());
+            var viewModel = new QuestionCreationViewModel { Answers = new List<AnswerCreationViewModel>() };
+            viewModel.Answers.Add(new AnswerCreationViewModel());
 
             return View(viewModel);
         }
@@ -67,8 +83,8 @@ namespace TestGenerator.Web.Controllers
         [HttpGet]
         public IActionResult AddSingleAnswer()
         {
-            var viewModel = new QuestionCreationViewModel { Answers = new List<Answer>() };
-            viewModel.Answers.Add(new Answer());
+            var viewModel = new QuestionCreationViewModel { Answers = new List<AnswerCreationViewModel>() };
+            viewModel.Answers.Add(new AnswerCreationViewModel());
 
             return View(viewModel);
         }

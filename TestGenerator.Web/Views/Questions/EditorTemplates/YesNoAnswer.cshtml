@@ -1,7 +1,7 @@
-﻿@model TestGenerator.Model.Entities.Answer
+﻿@model TestGenerator.Web.Models.AnswerCreationViewModel
 
 <td>
-    @Html.TextBoxFor(x => x.Text, new { @class = "form-control", @value = Model.Text, @disabled = true })
+    @Html.TextBoxFor(x => x.Text, new { @class = "form-control", @readonly = true})
     @Html.ValidationMessageFor(x => x.Text)
 </td>
 <td>
