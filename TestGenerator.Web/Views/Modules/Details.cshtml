@@ -13,7 +13,14 @@
             @foreach (TestGenerator.Model.Entities.Exam exam in Model.Exams)
             {
                 <li>
-                    <a asp-controller="Exams" asp-action="Details" asp-route-id="@exam.ExamId">@exam.Name</a>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <a asp-controller="Exams" asp-action="Details" asp-route-id="@exam.ExamId">@exam.Name</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Exams" asp-action="Attempt" asp-route-id="@exam.ExamId">@exam.Name</a>
+                    }
                 </li>
             }
         </ul>

@@ -38,6 +38,7 @@ namespace TestGenerator.Web.Controllers
             {
                 examList = _context.Exams
                     .Where(e => e.ClosingDate > DateTime.Now)
+                    .Include(e => e.Module)
                     .ToList();
             }
 

@@ -12,10 +12,10 @@
     </div>
     <div class="card-body h-100">
         <p class="card-text">@Model.Description</p>
-
+        
+        <a class="btn btn-primary" asp-action="Details" asp-route-id="@Model.ModuleId">Details</a>
         @if (User.IsInRole("Administrator"))
         {
-            <a class="btn btn-primary" asp-action="Details" asp-route-id="@Model.ModuleId">Details</a>
             <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.ModuleId">Modifier</a>
             <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.ModuleId">Supprimer</a>
         }

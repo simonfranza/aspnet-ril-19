@@ -88,7 +88,7 @@ namespace TestGenerator.Web.Controllers
                 }
             }
 
-            return View(userViewModel);
+            return RedirectToAction("Login", "User");
         }
 
         [HttpGet]
