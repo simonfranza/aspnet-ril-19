@@ -28,7 +28,7 @@ namespace TestGenerator.Web.Controllers
 
         public async Task<IActionResult> Index(string moduleId = "")
         {
-            List<Exam> examList = null;
+            List<ExamViewModel> examList = null;
 
             if (this.User.IsInRole("Administrator"))
             {
@@ -36,19 +36,50 @@ namespace TestGenerator.Web.Controllers
                     .Include(e => e.Questions)
                     .ThenInclude(e => e.Question)
                     .Include(e => e.Module)
-                    .ToList();
+                    .ToList()
+                    .Select(exam => new ExamViewModel()
+                    {
+                        ExamId = exam.ExamId,
+                        Name = exam.Name,
+                        Description = exam.Description,
+                        QuestionAmount = exam.QuestionAmount,
+                        AuthorizedAttempts = exam.AuthorizedAttempts,
+                        Duration = exam.Duration,
+                        ClosingDate = exam.ClosingDate,
+                        Module = exam.Module,
+                        Questions = exam.Questions
+                    }).ToList();
             }
             else
             {
+                var currentUser = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+
                 examList = _context.Exams
                     .Where(e => e.ClosingDate > DateTime.Now)
                     .Include(e => e.Module)
+                    .ToList()
+                    .Select(exam => new ExamViewModel()
+                    {
+                        ExamId = exam.ExamId,
+                        Name = exam.Name,
+                        Description = exam.Description,
+                        QuestionAmount = exam.QuestionAmount,
+                        AuthorizedAttempts = exam.AuthorizedAttempts,
+                        Duration = exam.Duration,
+                        ClosingDate = exam.ClosingDate,
+                        Module = exam.Module,
+                        Questions = exam.Questions,
+                        UserExamAttempts = _context.ExamAttempts
+                            .Where(attempt => attempt.ExamId.Equals(exam.ExamId))
+                            .Where(attempt => attempt.User.Equals(currentUser))
+                            .ToList()
+                    })
                     .ToList();
             }
 
             if (!String.IsNullOrEmpty(moduleId))
             {
-                examList = examList.Where(e => e.ModuleId.ToString().Equals(moduleId)).ToList();
+                examList = examList.Where(e => e.Module.ModuleId.ToString().Equals(moduleId)).ToList();
             }
 
             return View(new ExamIndexViewModel()
@@ -227,7 +258,7 @@ namespace TestGenerator.Web.Controllers
                 .Where(userAnswer => userAnswer.ExamAttemptId.Equals(examAttempt.ExamAttemptId))
                 .ToList();
 
-            examAttempt.Result = (userAnswers.Select(userAnswer => userAnswer.IsValid).Count() / userAnswers.Count()) * 100;
+            examAttempt.Result = (userAnswers.Select(userAnswer => userAnswer.IsValid).Count() / (userAnswers.Count() != 0 ? userAnswers.Count() : 1)) * 100;
 
             var examAttemptData = _context.ExamAttempts.Update(examAttempt);
 

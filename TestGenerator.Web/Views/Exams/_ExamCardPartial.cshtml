@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using TestGenerator.Model.Entities
 
-@model Exam
+@model ExamViewModel
 
 @inject SignInManager<User> SignInManager
 
@@ -12,20 +12,39 @@
         <a class="badge badge-primary" asp-controller="Modules" asp-action="Details" asp-route-id="@Model.Module.ModuleId">@Model.Module.Title</a>
     </div>
     <div class="card-body h-100">
-        <h6 class="card-subtitle mb-2 text-muted">@Model.QuestionAmount questions</h6>
-        <p class="card-text">@Model.Description</p>
-        <p class="card-text">@Model.AuthorizedAttempts essais autorisés</p>
+        <p class="card-subtitle card-text">@Model.Description</p>
+        <p class="mb-2 text-muted">@Model.QuestionAmount questions</p>
 
         @if (User.IsInRole("Administrator"))
         {
+            <p class="card-text">@Model.AuthorizedAttempts tentatives autorisés</p>
             <a class="btn btn-primary" asp-action="Details" asp-route-id="@Model.ExamId">Details</a>
-            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.ExamId">Supprimer</a>
+        }
+        else if (@Model.ClosingDate > DateTime.Now && (@Model.AuthorizedAttempts - @Model.UserExamAttempts.Count) > 0)
+        {
+            <p class="text-muted">@($"{@Model.AuthorizedAttempts - @Model.UserExamAttempts.Count} tentatives restantes ({@Model.AuthorizedAttempts} au total)")</p>
+            <a class="btn btn-primary" asp-action="Attempt" asp-route-id="@Model.ExamId">Passer l'examen</a>
+        }
+        else
+        {
+            <p class="text-muted">Plus de tentatives disponibles</p>
         }
 
     </div>
     <div class="card-footer text-muted  h-100">
         <p>
-            @String.Format("Date de cloturation : {0:dddd dd MMMM yyyy - HH:mm:ss}", @Model.ClosingDate)
-        </p>
+            @if (@Model.ClosingDate > DateTime.Now)
+            {
+            <p class="text-muted">
+                Temps restant :<br />
+                @{ TimeSpan ts = @Model.ClosingDate.Subtract(DateTime.Now); }
+                @($"{ts.Days} jours, {ts.Hours} heures et {ts.Minutes} minutes")
+            </p>
+        }
+        else
+        {
+            @($"Date de cloturation : {@Model.ClosingDate:d}")
+        }
+            </p>
+        </div>
     </div>
-</div>
