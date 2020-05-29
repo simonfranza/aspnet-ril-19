@@ -1,5 +1,6 @@
-﻿@model TestGenerator.Model.Entities.Exam
-@using TestGenerator.Model.Entities
+﻿@using TestGenerator.Model.Entities
+@model Exam
+
 
 @{ ViewData["Title"] = $"{Model.Name} - Suppression"; }
 
@@ -13,8 +14,7 @@
         <ul>
             @foreach (var question in @Model.Questions)
             {
-                <li>@question.Question.Text</li>
-            }
+<li>@question.Question.Text</li>            }
         </ul>
 
         <hr class="mt-5" />

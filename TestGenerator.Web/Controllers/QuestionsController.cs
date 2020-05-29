@@ -27,6 +27,7 @@ namespace TestGenerator.Web.Controllers
         {
             var questionList = _context.Questions
                 .Include(e => e.Module)
+                .Include(e => e.Exams)
                 .ToList();
 
             return View(questionList);
