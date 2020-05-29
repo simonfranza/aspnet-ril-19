@@ -15,7 +15,11 @@ namespace TestGenerator.Model.Entities
         public int QuestionId { get; set; }
 
         [Required]
-        [Column("ExamParticipationId")]
-        public int ExamParticipationId { get; set; }
+        [Column("AnswserId")]
+        public int AnswerId { get; set; }
+
+        [Required]
+        [Column("ExamAttemptId")]
+        public int ExamAttemptId { get; set; }
     }
 }

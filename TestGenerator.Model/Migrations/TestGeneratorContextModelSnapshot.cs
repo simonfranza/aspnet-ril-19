@@ -195,12 +195,17 @@ namespace TestGenerator.Model.Migrations
 
                     b.Property<DateTime>("ParticipationDate");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnName("PersonId");
-
                     b.Property<int>("Result");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnName("UserId");
+
                     b.HasKey("ExamAttemptId");
+
+                    b.HasIndex("ExamId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ExamAttempts");
                 });
@@ -328,8 +333,11 @@ namespace TestGenerator.Model.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ExamParticipationId")
-                        .HasColumnName("ExamParticipationId");
+                    b.Property<int>("AnswerId")
+                        .HasColumnName("AnswserId");
+
+                    b.Property<int>("ExamAttemptId")
+                        .HasColumnName("ExamAttemptId");
 
                     b.Property<bool>("IsValid");
 
@@ -399,6 +407,19 @@ namespace TestGenerator.Model.Migrations
                     b.HasOne("TestGenerator.Model.Entities.Module", "Module")
                         .WithMany("Exams")
                         .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TestGenerator.Model.Entities.ExamAttempt", b =>
+                {
+                    b.HasOne("TestGenerator.Model.Entities.Exam", "Exam")
+                        .WithMany()
+                        .HasForeignKey("ExamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TestGenerator.Model.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

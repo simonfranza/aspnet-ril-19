@@ -1,0 +1,41 @@
+﻿@model TestGenerator.Web.Models.ExamAttempt.ExamAttemptViewModel
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Attempt" class="mt-5">
+            @Html.HiddenFor(m => m.ExamId)
+            @Html.HiddenFor(m => m.UserId)
+
+            @for(int i = 0; i < Model.Questions.Count; i++)
+            {
+                <div class="form-group">
+                    @Html.HiddenFor(m => m.Questions[i].QuestionId)
+                    @using TestGenerator.Model.Constants
+
+                    @Html.TextBoxFor(m => m.Questions[i].Text, new { @class = "form-control", @readonly = true, @style = "font-size: 1.7em; margin: 0; background: none; border: none;"})
+                    @for (int j = 0; j < @Model.Questions[i].Answers.Count; j++)
+                    {
+                    <div class="form-row mt-3">
+                        @Html.HiddenFor(m => m.Questions[i].Answers[j].AnswerId)
+                        @Html.TextBoxFor(m => m.Questions[i].Answers[j].Text, new { @class = "col-8 form-control", @readonly = true })
+                        @switch (Model.Questions[i].QuestionType)
+                        {
+                            case QuestionTypeEnum.YesNo:
+                            case QuestionTypeEnum.SingleChoice:
+                                @Html.CheckBoxFor(m => m.Questions[i].Answers[j].StudentAnswer, new { @class = "col-4 form-control rdb" })
+                                break;
+                            case QuestionTypeEnum.MultipleChoice:
+                                @Html.CheckBoxFor(m => m.Questions[i].Answers[j].StudentAnswer, new { @class = "col-4 form-control" })
+                                break;
+                        }
+                    </div>
+                    }
+                </div>
+            }
+
+            <div class="form-group">
+                <input type="submit" value="Valider et terminer" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

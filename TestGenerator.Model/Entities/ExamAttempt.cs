@@ -14,10 +14,12 @@ namespace TestGenerator.Model.Entities
         [Required]
         [Column("ExamId")]
         public int ExamId { get; set; }
+        public Exam Exam { get; set; }
 
         [Required]
-        [Column("PersonId")]
-        public int PersonId { get; set; }
+        [Column("UserId")]
+        public string UserId { get; set; }
+        public User User { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
