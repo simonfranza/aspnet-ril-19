@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<TestGenerator.Model.Entities.Question>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Questions";
 }
 
 <h2>Index</h2>
 
 <p>
-    <a asp-action="Create">Ajouter une question</a>
+    <a class="btn btn-primary" asp-action="Create">Créer une question</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>

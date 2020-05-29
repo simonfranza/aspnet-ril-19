@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,5 +24,11 @@ namespace TestGenerator.Web.Models
         public List<AnswerCreationViewModel> Answers { get; set; }
 
         public List<AnswerCreationViewModel> BinaryAnswers { get; set; } = new List<AnswerCreationViewModel> { new AnswerCreationViewModel { Text = "Oui" }, new AnswerCreationViewModel { Text = "Non" } };
+
+        [Required(ErrorMessage ="La question doit appartenir à un module.")]
+        [Display(Name ="Module de cours")]
+        public int ModuleId { get; set; }
+
+        public List<SelectListItem> Modules { get; set; }
     }
 }
