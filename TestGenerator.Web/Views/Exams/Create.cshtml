@@ -1,61 +1,64 @@
 ﻿@model ExamCreationViewModel
 
 @{
-    ViewData["Title"] = "Ajouter un examen";
+    ViewData["Title"] = "Créer un examen";
 }
 
-<h1>Créer un examen</h1>
+<div class="container mt-4">
 
-<div class="row">
-    <div class="col-md-4">
-        @if (Model.Questions.Count == 0)
-        {
-            <p>Aucune question n'existe, il est donc impossible de créer un examen.</p>
-            <li><a asp-controller="Questions" asp-action="Create">Créer une question</a></li>
-        }
-        else
-        {
-            <form asp-action="Create">
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
-                    <textarea asp-for="Description" class="form-control"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ModuleId" class="control-label"></label>
-                    <select id="moduleSelect" asp-for="ModuleId" asp-items="@Model.Modules" class="form-control"></select>
-                    <span asp-validation-for="ModuleId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="QuestionAmount" class="control-label"></label>
-                    <input asp-for="QuestionAmount" min="1" max="@Model.Questions.Count" class="form-control" />
-                    <span asp-validation-for="QuestionAmount" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AuthorizedAttempts" class="control-label"></label>
-                    <input asp-for="AuthorizedAttempts" type="number" min="1" class="form-control" />
-                    <span asp-validation-for="AuthorizedAttempts" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Duration" class="control-label"></label>
-                    <input asp-for="Duration" type="number" min="1" class="form-control" />
-                    <span asp-validation-for="Duration" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ClosingDate" class="control-label"></label>
-                    <input asp-for="ClosingDate" type="date" min="@{ DateTime.Now.Date.ToString("yyyy-MM-dd"); }" value="@{ (DateTime.Now).Date.ToString("yyyy-MM-dd"); }" class="form-control" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
-                    <span asp-validation-for="ClosingDate" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Créer un examen" class="btn btn-primary" />
-                </div>
-            </form>
-        }
+    <h1>Créer un examen</h1>
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+            @if (Model.Questions.Count == 0)
+            {
+                <p>Aucune question n'existe, il est donc impossible de créer un examen.</p>
+                <li><a asp-controller="Questions" asp-action="Create">Créer une question</a></li>
+            }
+            else
+            {
+                <form asp-action="Create">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ModuleId" class="control-label"></label>
+                        <select id="moduleSelect" asp-for="ModuleId" asp-items="@Model.Modules" class="form-control"></select>
+                        <span asp-validation-for="ModuleId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="QuestionAmount" class="control-label"></label>
+                        <input asp-for="QuestionAmount" min="1" max="@Model.Questions.Count" class="form-control" />
+                        <span asp-validation-for="QuestionAmount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AuthorizedAttempts" class="control-label"></label>
+                        <input asp-for="AuthorizedAttempts" type="number" min="1" class="form-control" />
+                        <span asp-validation-for="AuthorizedAttempts" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Duration" class="control-label"></label>
+                        <input asp-for="Duration" type="number" min="1" class="form-control" />
+                        <span asp-validation-for="Duration" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ClosingDate" class="control-label"></label>
+                        <input asp-for="ClosingDate" type="date" min="@{ DateTime.Now.Date.ToString("yyyy-MM-dd"); }" value="@{ (DateTime.Now).Date.ToString("yyyy-MM-dd"); }" class="form-control" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd">
+                        <span asp-validation-for="ClosingDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Créer un examen" class="btn btn-primary" />
+                    </div>
+                </form>
+            }
+        </div>
     </div>
 </div>
 

@@ -18,16 +18,19 @@
             }
         </ul>
     
-        <h4 class="mt-3">@Html.DisplayNameFor(model => model.Questions)</h4>
-        <ul>
-            @foreach (TestGenerator.Model.Entities.Question question in Model.Questions)
-            {
-                <li>
-                    <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Text</a>
-                </li>
-            }
-        </ul>
-        
+        @if (User.IsInRole("Administrator"))
+        {
+            <h4 class="mt-3">@Html.DisplayNameFor(model => model.Questions)</h4>
+            <ul>
+                @foreach (TestGenerator.Model.Entities.Question question in Model.Questions)
+                {
+                    <li>
+                        <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Text</a>
+                    </li>
+                }
+            </ul>
+        }
+
         <div class="mt-4">
             @if (User.IsInRole("Administrator"))
             {

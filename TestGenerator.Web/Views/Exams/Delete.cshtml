@@ -1,79 +1,28 @@
 ﻿@model TestGenerator.Model.Entities.Exam
 @using TestGenerator.Model.Entities
 
-@{
-    ViewData["Title"] = "Delete";
-}
+@{ ViewData["Title"] = $"{Model.Name} - Suppression"; }
 
-<h2>Delete</h2>
+<div class="row mt-5 justify-content-center">
+    <div class="col-10">
+        <h2>Voulez-vous vraiment supprimer l'examen "@Model.Name" ?</h2>
+        <hr />
+        <h3>Les éléments suivants seront également supprimés : </h3>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Exam</h4>
-    <hr />
-    <div class="row">
-        <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.Module)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Module.Title)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.QuestionAmount)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.QuestionAmount)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.AuthorizedAttempts)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.AuthorizedAttempts)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Duration)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Duration)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.ClosingDate)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.ClosingDate)
-            </dd>
-        </dl>
-        <dl class="dl-horizontal col-md-6">
-            <dt>
-                @Html.DisplayNameFor(model => model.Questions)
-            </dt>
-            <dd>
-                <ul>
-                    @foreach (ExamQuestion question in Model.Questions)
-                    {
-                        <li><a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">@question.Question.Text</a></li>
-                    }
-                </ul>
-            </dd>
-        </dl>
+        <h4 class="mt-5">Questions</h4>
+        <ul>
+            @foreach (var question in @Model.Questions)
+            {
+                <li>@question.Question.Text</li>
+            }
+        </ul>
+
+        <hr class="mt-5" />
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="ModuleId" />
+            <input class="btn btn-danger" type="submit" value="Supprimer l'examen" />
+            <a class="btn btn-outline-primary" asp-action="Index">Retour à la liste</a>
+        </form>
     </div>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="ExamId" />
-        <input type="submit" value="Supprimer" class="btn btn-danger" /> |
-        <a asp-action="Index">Retour à la liste</a>
-    </form>
 </div>
