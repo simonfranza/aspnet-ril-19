@@ -21,5 +21,7 @@ namespace TestGenerator.Web.Models
         public QuestionTypeEnum QuestionType { get; set; }
 
         public List<Answer> Answers { get; set; }
+
+        public List<Answer> BinaryAnswers { get; set; } = new List<Answer> { new Answer { Text = "Oui" }, new Answer { Text = "Non" } };
     }
 }

@@ -50,6 +50,12 @@ namespace TestGenerator.Web.Controllers
         }
 
         [HttpGet]
+        public IActionResult AddBinaryAnswer()
+        {
+            return View(new QuestionCreationViewModel());
+        }
+
+        [HttpGet]
         public IActionResult AddMultiAnswer()
         {
             var viewModel = new QuestionCreationViewModel { Answers = new List<Answer>() };

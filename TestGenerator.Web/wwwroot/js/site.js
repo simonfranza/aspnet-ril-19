@@ -6,24 +6,34 @@ $(function () {
     $(document).ready(() => {
         $('.answers').hide();
         $('#yesno').show();
+        jQuery.get('/Questions/AddBinaryAnswer').done(function (html) {
+            $('#binary').append(html);
+        });
     });
 
     $('#questionTypeSelect').on('change', function () {
         $('.answers').hide();
         switch (this.value) {
             case '0': $('#yesno').show();
+                jQuery.get('/Questions/AddBinaryAnswer').done(function (html) {
+                    $('#binary').append(html);
+                });
+                $('#mcq').empty();
+                $('#scq').empty();
                 break;
             case '1': $('#singlechoice').show();
                 jQuery.get('/Questions/AddSingleAnswer').done(function (html) {
                     $('#scq').append(html);
                 });
                 $('#mcq').empty();
+                $('#binary').empty();
                 break;
             case '2': $('#multichoice').show();
                 jQuery.get('/Questions/AddMultiAnswer').done(function (html) {
                     $('#mcq').append(html);
                 });
                 $('#scq').empty();
+                $('#binary').empty();
                 break;
         }
     });

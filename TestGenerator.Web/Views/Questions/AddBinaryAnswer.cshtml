@@ -1,0 +1,13 @@
+﻿@model TestGenerator.Web.Models.QuestionCreationViewModel
+@using TestGenerator.Model.Helpers
+
+@{
+    Layout = null;
+}
+
+<tr>
+    @Html.EditorFor(x => x.BinaryAnswers[0], "YesNoAnswer")
+</tr>
+<tr>
+    @Html.EditorFor(x => x.BinaryAnswers[1], "YesNoAnswer")
+</tr>
